@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dosimetria da Pena</title>
+<meta name="description" content="App de estudo de Dosimetria da Pena (Direito Penal): flashcards com exportação para o Anki, questões, bizus, artigos, jurisprudência e simulador de cálculo.">
+<style>
+:root{
+  --bg:#f6f4ef;--surface:#ffffff;--surface-2:#f1ede4;--text:#1b2230;--muted:#5b6375;--border:#e3ddd1;
+  --primary:#1f3a5f;--primary-ink:#ffffff;--accent:#a87a1e;--accent-soft:#f6ecd6;
+  --ok:#1d7a4b;--ok-soft:#e2f3ea;--bad:#b3261e;--bad-soft:#fbe6e4;--warn:#8a5d00;--warn-soft:#fff2cf;
+  --f0:#56606f;--f1:#2b67b0;--f2:#7547ad;--f3:#bf561b;--f4:#1d7a6b;--f5:#9b3a6b;
+  --shadow:0 1px 2px rgba(20,30,50,.05),0 6px 18px rgba(20,30,50,.06);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e131b;--surface:#161d28;--surface-2:#1d2634;--text:#e6e9ef;--muted:#9ba4b6;--border:#2a3446;
+    --primary:#93b7ea;--primary-ink:#0e131b;--accent:#e2b65c;--accent-soft:#3a2f18;
+    --ok:#5fd39a;--ok-soft:#132f20;--bad:#ff8f86;--bad-soft:#3b1614;--warn:#f1c453;--warn-soft:#3a2d0f;
+    --f0:#a3acbb;--f1:#73a9f0;--f2:#b38ef0;--f3:#f29a60;--f4:#5fd0bd;--f5:#ef8fbf;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e131b;--surface:#161d28;--surface-2:#1d2634;--text:#e6e9ef;--muted:#9ba4b6;--border:#2a3446;
+  --primary:#93b7ea;--primary-ink:#0e131b;--accent:#e2b65c;--accent-soft:#3a2f18;
+  --ok:#5fd39a;--ok-soft:#132f20;--bad:#ff8f86;--bad-soft:#3b1614;--warn:#f1c453;--warn-soft:#3a2d0f;
+  --f0:#a3acbb;--f1:#73a9f0;--f2:#b38ef0;--f3:#f29a60;--f4:#5fd0bd;--f5:#ef8fbf;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.25;margin:0}
+a{color:var(--primary)}
+b,strong{font-weight:700}
+.top{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:1px solid var(--border)}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;padding-bottom:4px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{flex:0 0 auto;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--primary);color:var(--primary-ink);font-size:21px}
+.brand h1{font-size:1.2rem}
+.brand p{margin:0;color:var(--muted);font-size:.8rem}
+.icon-btn{flex:0 0 auto;border:1px solid var(--border);background:var(--surface);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:18px;cursor:pointer}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:0 0 auto;border:0;background:none;color:var(--muted);font:inherit;font-weight:650;font-size:.92rem;padding:10px 12px 9px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn[aria-selected="true"]{color:var(--primary);border-bottom-color:var(--accent)}
+main{padding-top:22px;padding-bottom:56px}
+.panel>h2{font-size:1.65rem;margin:4px 0 6px}
+.lead{color:var(--muted);margin:0 0 18px;max-width:72ch}
+h3.sec{font-size:1.2rem;margin:28px 0 12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat .n{font-size:1.9rem;font-weight:700;font-family:Georgia,serif;color:var(--primary);line-height:1.1}
+.stat .l{color:var(--muted);font-size:.85rem}
+.bar{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .4s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-weight:650;font-size:.9rem;padding:9px 14px;border-radius:10px;cursor:pointer;text-decoration:none;line-height:1.2}
+.btn:hover{border-color:var(--primary)}
+.btn.primary{background:var(--primary);color:var(--primary-ink);border-color:var(--primary)}
+.btn.small{padding:6px 10px;font-size:.82rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chip{display:inline-block;font-size:.74rem;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--surface-2);color:var(--c,var(--muted));border:1px solid var(--border);white-space:nowrap}
+.chip.new{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.chip.pend{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.t-fundamentos{--c:var(--f0)}.t-fase1{--c:var(--f1)}.t-fase2{--c:var(--f2)}.t-fase3{--c:var(--f3)}.t-drogas{--c:var(--f5)}.t-regime{--c:var(--f4)}.t-concurso{--c:var(--accent)}.t-calculo{--c:var(--primary)}
+select,input[type=text],input[type=number],input[type=search]{font:inherit;font-size:.95rem;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 10px;max-width:100%}
+input[type=search]{min-width:0;flex:1 1 220px}
+input[type=number]{width:76px}
+input[type=checkbox],input[type=radio]{accent-color:var(--primary);width:16px;height:16px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.toolbar .sp{flex:1}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;color:var(--muted);font:inherit;font-weight:650;font-size:.86rem;padding:8px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--primary-ink)}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.note{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.9rem;color:var(--muted)}
+.note b{color:var(--text)}
+/* fluxo */
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.step{position:relative;background:var(--surface);border:1px solid var(--border);border-top:4px solid var(--c);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+.step .k{font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--c)}
+.step h3{font-size:1.02rem;margin:4px 0 6px}
+.step p{margin:0;font-size:.86rem;color:var(--muted)}
+.step .lim{margin-top:10px;font-size:.74rem;font-weight:750;padding:3px 8px;border-radius:7px;display:inline-block}
+.lim.in{background:var(--surface-2);color:var(--muted)}
+.lim.out{background:var(--accent-soft);color:var(--accent)}
+.step:not(:last-child)::after{content:"→";position:absolute;right:-7px;top:50%;transform:translate(50%,-50%);color:var(--muted);font-weight:700;z-index:2}
+@media (max-width:880px){.flow{grid-template-columns:1fr}.step:not(:last-child)::after{content:"↓";right:50%;top:auto;bottom:-7px;transform:translate(50%,50%)}}
+/* tabelas */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
+.tbl th,.tbl td{border-bottom:1px solid var(--border);padding:9px 11px;text-align:left;vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl th{background:var(--surface-2);font-weight:700;white-space:nowrap}
+.yes{color:var(--ok);font-weight:700}.no{color:var(--bad);font-weight:700}
+/* flashcards */
+.fc{min-height:280px;display:flex;flex-direction:column;gap:14px}
+.fc-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:.82rem;color:var(--muted)}
+.fc-front{font-size:1.25rem;font-family:Georgia,serif;font-weight:600;line-height:1.4}
+.fc-back{border-top:1px dashed var(--border);padding-top:14px;font-size:1.02rem;animation:fade .25s ease}
+.fc-back ul{margin:.3em 0;padding-left:1.2em}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.fc-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.rate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%}
+.rate .btn{flex-direction:column;gap:2px;padding:9px 6px}
+.rate small{font-weight:500;color:var(--muted);font-size:.7rem}
+.r1{color:var(--bad)!important}.r2{color:var(--warn)!important}.r3{color:var(--ok)!important}.r4{color:var(--primary)!important}
+.kbd{font:600 .72rem ui-monospace,Consolas,monospace;border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:0 5px;color:var(--muted)}
+.done{text-align:center;padding:36px 18px}
+.done .big{font-size:2.6rem}
+/* questões */
+.q-enun{font-size:1.06rem;margin:10px 0 14px}
+.alt{display:flex;gap:10px;width:100%;text-align:left;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:.97rem;padding:11px 12px;border-radius:10px;cursor:pointer;margin-bottom:8px;line-height:1.45}
+.alt:hover:not(:disabled){border-color:var(--primary)}
+.alt:disabled{cursor:default}
+.alt .L{font-weight:800;color:var(--muted);min-width:1.3em}
+.alt.ok{background:var(--ok-soft);border-color:var(--ok)}
+.alt.ok .L{color:var(--ok)}
+.alt.bad{background:var(--bad-soft);border-color:var(--bad)}
+.alt.bad .L{color:var(--bad)}
+.ce{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ce .alt{justify-content:center;font-weight:700}
+.fb{border-radius:12px;padding:14px 16px;margin-top:6px;border:1px solid transparent}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}
+.fb.bad{background:var(--bad-soft);border-color:var(--bad)}
+.fb h4{margin:0 0 6px;font-size:1rem}
+.fb p{margin:.4em 0}
+.fund{font-size:.86rem;color:var(--muted)}
+.qnav{display:flex;justify-content:space-between;gap:8px;margin-top:14px;flex-wrap:wrap}
+.score{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+.score b{color:var(--text)}
+/* bizus */
+.bz h3{font-size:1.08rem;margin-bottom:8px}
+.bz .mn{font-family:Georgia,serif;font-size:1.35rem;font-weight:700;color:var(--accent);margin:4px 0 8px;letter-spacing:.02em}
+.bz p{margin:.45em 0}
+.bz ul,.bz ol{margin:.4em 0;padding-left:1.2em}
+.bz .tbl{font-size:.86rem}
+/* jurisprudência e artigos */
+.j{border-left:4px solid var(--c,var(--primary))}
+.j .hd{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.j h3{font-size:1.05rem;margin-right:4px}
+.j .txt{margin:4px 0 10px}
+.j .nota{font-size:.88rem;color:var(--muted);background:var(--surface-2);border-radius:8px;padding:8px 10px}
+.j .nota b{color:var(--text)}
+.stf{--c:var(--f5)}.stj{--c:var(--f1)}
+.grp{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
+.art h3{font-size:1rem;color:var(--primary);margin-bottom:6px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.art .txt p{margin:.3em 0}
+.art .txt .inc{padding-left:1.1em}
+.art .obs{margin-top:8px;font-size:.86rem;color:var(--warn);background:var(--warn-soft);border-radius:8px;padding:6px 10px}
+mark{background:var(--accent-soft);color:inherit;padding:0 2px;border-radius:3px;outline:1px solid var(--accent)}
+.empty{text-align:center;color:var(--muted);padding:30px}
+/* simulador */
+.sim{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:16px;align-items:start}
+.sim>div{min-width:0}
+@media (max-width:880px){.sim{grid-template-columns:minmax(0,1fr)}}
+#sPreset{width:100%}
+.sim .card+.card{margin-top:14px}
+.sim h3{font-size:1.05rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ph{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;background:var(--c);color:var(--surface);font:800 .78rem system-ui,sans-serif}
+.field{min-width:0;display:flex;flex-direction:column;gap:4px;font-size:.84rem;font-weight:650;color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:6px}
+.checks label{display:flex;gap:8px;align-items:center;font-size:.9rem;padding:7px 9px;border:1px solid var(--border);border-radius:9px;cursor:pointer;background:var(--surface)}
+.checks label:has(input:checked){border-color:var(--bad);background:var(--bad-soft)}
+.checks.pos label:has(input:checked){border-color:var(--primary);background:var(--surface-2)}
+.causa{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:8px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.causa input[type=text]{flex:1 1 160px}
+.causa .x{border:0;background:none;color:var(--bad);font-size:1.2rem;cursor:pointer;padding:0 6px}
+.result{position:sticky;top:118px}
+@media (max-width:880px){.result{position:static}}
+.big-pena{font-family:Georgia,serif;font-size:1.7rem;font-weight:700;color:var(--primary);line-height:1.2;margin:4px 0 12px}
+.memo{margin:0;padding-left:1.1em;font-size:.9rem}
+.memo li{margin-bottom:7px}
+.memo .w{color:var(--warn)}
+.out-row{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--border);padding:10px 0 0;margin-top:10px;font-size:.92rem}
+.out-row span:last-child{text-align:right;font-weight:700}
+.err{color:var(--bad);font-weight:650}
+footer{border-top:1px solid var(--border);padding:22px 0 40px;color:var(--muted);font-size:.84rem}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;max-width:calc(100% - 32px)}
+.toast.on{opacity:1}
+@media (max-width:560px){
+  .panel>h2{font-size:1.4rem}
+  .fc-front{font-size:1.12rem}
+  .rate .btn{font-size:.84rem}
+  .card{padding:15px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">⚖</span>
+      <div><h1>Dosimetria da Pena</h1><p>Direito Penal · sistema trifásico · arts. 59 a 68 do CP</p></div>
+    </div>
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="Alternar tema claro/escuro" title="Tema claro/escuro">◐</button>
+  </div>
+  <nav class="tabs wrap" role="tablist" aria-label="Seções">
+    <button class="tab-btn" role="tab" data-tab="inicio">Mapa</button>
+    <button class="tab-btn" role="tab" data-tab="cards">Flashcards</button>
+    <button class="tab-btn" role="tab" data-tab="questoes">Questões</button>
+    <button class="tab-btn" role="tab" data-tab="bizus">Bizus</button>
+    <button class="tab-btn" role="tab" data-tab="artigos">Artigos</button>
+    <button class="tab-btn" role="tab" data-tab="juris">Jurisprudência</button>
+    <button class="tab-btn" role="tab" data-tab="simulador">Simulador</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<!-- ============ MAPA ============ -->
+<section id="tab-inicio" class="panel" role="tabpanel">
+  <h2>O caminho da pena</h2>
+  <p class="lead">Visão geral do tema antes de ir para os cards e questões. A ideia: entender <b>o que entra em cada fase</b>, <b>qual fração se usa</b> e <b>se a fase pode romper os limites da pena cominada</b> — é isso que as bancas mais cobram.</p>
+
+  <div class="grid g4" id="homeStats"></div>
+
+  <h3 class="sec">Sistema trifásico (art. 68 do CP)</h3>
+  <div class="flow">
+    <div class="step" style="--c:var(--f0)"><div class="k">Antes de tudo</div><h3>Tipo penal</h3><p>Simples ou qualificado? A <b>qualificadora</b> cria novos limites mínimo e máximo.</p><span class="lim in">Define o intervalo</span></div>
+    <div class="step" style="--c:var(--f1)"><div class="k">1ª fase · art. 59</div><h3>Pena-base</h3><p>8 circunstâncias judiciais. Fração usual: 1/6 da mínima ou 1/8 do intervalo.</p><span class="lim in">Presa entre mín. e máx.</span></div>
+    <div class="step" style="--c:var(--f2)"><div class="k">2ª fase · arts. 61–67</div><h3>Pena intermediária</h3><p>Agravantes e atenuantes. Fração usual: 1/6 cada.</p><span class="lim in">Presa entre mín. e máx. (Súm. 231)</span></div>
+    <div class="step" style="--c:var(--f3)"><div class="k">3ª fase</div><h3>Pena definitiva</h3><p>Causas de aumento e de diminuição, com frações previstas em lei.</p><span class="lim out">Pode romper mín. e máx.</span></div>
+    <div class="step" style="--c:var(--f4)"><div class="k">Depois da pena</div><h3>Execução</h3><p>Regime (art. 33), detração (art. 387, §2º, CPP), substituição (art. 44), sursis (art. 77), multa.</p><span class="lim in">Consequências da pena</span></div>
+  </div>
+  <p class="note" style="margin-top:14px"><b>Vários crimes?</b> Dose cada crime separadamente nas três fases e só depois aplique a regra do concurso: material (art. 69, soma), formal (art. 70, +1/6 a 1/2) ou continuado (art. 71, +1/6 a 2/3).</p>
+
+  <h3 class="sec">Resumo das fases</h3>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th></th><th>1ª fase</th><th>2ª fase</th><th>3ª fase</th></tr></thead>
+      <tbody>
+        <tr><th>Base legal</th><td>Art. 59 do CP</td><td>Arts. 61 a 67 do CP</td><td>Parte Geral e Parte Especial</td></tr>
+        <tr><th>O que entra</th><td>Circunstâncias judiciais</td><td>Agravantes e atenuantes (genéricas)</td><td>Majorantes e minorantes (frações)</td></tr>
+        <tr><th>Fração</th><td>Não há fração legal: 1/6 da mínima ou 1/8 do intervalo</td><td>Não há fração legal: 1/6 (usual)</td><td>Fixada em lei (ex.: tentativa 1/3 a 2/3)</td></tr>
+        <tr><th>Rompe limites?</th><td class="no">Não</td><td class="no">Não (Súm. 231 STJ)</td><td class="yes">Sim</td></tr>
+        <tr><th>Rol</th><td>Fechado (8 circunstâncias)</td><td>Agravantes: taxativo · Atenuantes: exemplificativo (art. 66)</td><td>Legal</td></tr>
+        <tr><th>Súmulas-chave</th><td>444, 636 STJ · Tema 150 STF · Tema 1.077 STJ</td><td>231, 241, 545, 630 STJ · Tema 585 e 1.194 STJ</td><td>443, 442 STJ · art. 68, par. único</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sec">Novidades que podem cair (2024–2026)</h3>
+  <div class="grid g2">
+    <div class="card j stj"><div class="hd"><span class="chip new">Mantida · 2024</span></div><h3>Súmula 231 continua valendo</h3><p class="txt small">A 3ª Seção do STJ rejeitou, em agosto de 2024, a proposta de revisão. Atenuante não leva a pena abaixo do mínimo.</p></div>
+    <div class="card j stj"><div class="hd"><span class="chip new">Tema 1.194 · 2025</span></div><h3>Confissão: Súmulas 545 e 630 revisadas</h3><p class="txt small">A confissão atenua mesmo sem ser usada na sentença; a qualificada atenua menos; no tráfico, admitir só o uso próprio atenua em proporção menor.</p></div>
+    <div class="card j stj"><div class="hd"><span class="chip new">Tema 1.394 · 2026</span></div><h3>Vítima com filhos menores</h3><p class="txt small">É válido exasperar a pena-base pelas consequências quando a vítima de homicídio deixa filho menor de idade.</p></div>
+    <div class="card j stj"><div class="hd"><span class="chip pend">Tema 1.422 · pendente</span></div><h3>Majorantes em cascata</h3><p class="txt small">O STJ vai definir se as causas de aumento podem incidir de forma sucessiva (em cascata) na 3ª fase. Afetado em abril de 2026.</p></div>
+  </div>
+
+  <h3 class="sec">Checklist do bis in idem</h3>
+  <div class="card">
+    <ul style="margin:0;padding-left:1.2em">
+      <li>Circunstância que <b>qualifica</b> o crime não volta como agravante nem como circunstância judicial.</li>
+      <li>A mesma condenação não pode ser <b>maus antecedentes e reincidência</b> (Súm. 241 STJ).</li>
+      <li><b>Elementar do tipo</b> não aumenta pena-base (ex.: “lucro fácil” no furto, “morte” no homicídio).</li>
+      <li>Natureza e quantidade da droga: <b>só uma fase</b> (Tema 712 STF).</li>
+      <li>Majorante aplicada na 3ª fase não pode ser usada também na 1ª.</li>
+      <li>Concurso formal + crime continuado no mesmo contexto: <b>só o aumento da continuidade</b> (STJ).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section id="tab-cards" class="panel" role="tabpanel" hidden>
+  <h2>Flashcards</h2>
+  <p class="lead">Revise aqui com repetição espaçada ou exporte tudo para o Anki. Atalhos: <span class="kbd">Espaço</span> mostra a resposta, <span class="kbd">1</span>–<span class="kbd">4</span> avaliam, <span class="kbd">←</span> <span class="kbd">→</span> navegam.</p>
+  <div class="toolbar">
+    <select id="fcTag" aria-label="Filtrar por assunto"></select>
+    <div class="seg" role="group" aria-label="Modo">
+      <button type="button" data-mode="srs" aria-pressed="true">Revisão do dia</button>
+      <button type="button" data-mode="nav" aria-pressed="false">Navegar todos</button>
+    </div>
+    <button class="btn small" type="button" id="fcShuffle" title="Embaralhar">⤮ Embaralhar</button>
+    <span class="sp"></span>
+    <span class="small muted" id="fcCounts"></span>
+  </div>
+  <div class="card fc" id="fcBox"></div>
+
+  <h3 class="sec">Exportar para o Anki</h3>
+  <div class="card">
+    <div class="toolbar" style="margin-bottom:10px">
+      <button class="btn primary" type="button" id="ankiAll">⬇ Baixar todos os cards (.txt)</button>
+      <button class="btn" type="button" id="ankiFilter">⬇ Baixar só o filtro atual</button>
+      <button class="btn" type="button" id="ankiCopy">⧉ Copiar texto</button>
+    </div>
+    <ol class="small" style="margin:0;padding-left:1.2em">
+      <li>No Anki do computador: <b>Arquivo → Importar</b> e escolha o arquivo <b>.txt</b>.</li>
+      <li>O arquivo já vem configurado: separador <b>tabulação</b>, <b>HTML</b> ativado, baralho <b>Direito Penal::Dosimetria da Pena</b> e etiquetas por assunto.</li>
+      <li>Tipo de nota: <b>Básico</b> (campo 1 → Frente, campo 2 → Verso). Clique em <b>Importar</b>.</li>
+      <li>No celular (AnkiDroid/AnkiMobile), importe no computador e sincronize — ou use “Copiar texto” e cole num arquivo .txt.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ QUESTÕES ============ -->
+<section id="tab-questoes" class="panel" role="tabpanel" hidden>
+  <h2>Questões</h2>
+  <p class="lead">Questões inéditas no estilo das bancas (CEBRASPE, FGV/OAB, VUNESP), montadas sobre os pontos que mais caem. Cada uma traz o comentário e o fundamento legal ou jurisprudencial.</p>
+  <div class="toolbar">
+    <select id="qTema" aria-label="Filtrar por assunto"></select>
+    <select id="qTipo" aria-label="Filtrar por tipo">
+      <option value="">Todos os tipos</option>
+      <option value="ce">Certo ou errado</option>
+      <option value="me">Múltipla escolha</option>
+    </select>
+    <select id="qShow" aria-label="Quais questões">
+      <option value="">Todas</option>
+      <option value="pend">Só não respondidas</option>
+      <option value="err">Só as que errei</option>
+    </select>
+    <button class="btn small" type="button" id="qShuffle">⤮ Embaralhar</button>
+    <button class="btn small" type="button" id="qReset">↺ Zerar respostas</button>
+  </div>
+  <div class="card" style="margin-bottom:14px"><div class="score" id="qScore"></div><div class="bar"><i id="qBar"></i></div></div>
+  <div class="card" id="qBox"></div>
+</section>
+
+<!-- ============ BIZUS ============ -->
+<section id="tab-bizus" class="panel" role="tabpanel" hidden>
+  <h2>Bizus de memorização</h2>
+  <p class="lead">Mnemônicos, tabelas e pegadinhas para fixar números e frações — a parte que mais derruba candidato.</p>
+  <div class="grid g2" id="bzBox"></div>
+</section>
+
+<!-- ============ ARTIGOS ============ -->
+<section id="tab-artigos" class="panel" role="tabpanel" hidden>
+  <h2>Artigos de lei</h2>
+  <p class="lead">Dispositivos essenciais da CF, do CP, do CPP e das leis especiais. Texto conforme a redação compilada; confira sempre a versão atualizada no <a href="https://www.planalto.gov.br/ccivil_03/decreto-lei/del2848compilado.htm" target="_blank" rel="noopener">site do Planalto</a>.</p>
+  <div class="toolbar"><input type="search" id="artQ" placeholder="Buscar nos artigos (ex.: reincidência, 1/6, regime)" aria-label="Buscar nos artigos"></div>
+  <div id="artBox"></div>
+</section>
+
+<!-- ============ JURISPRUDÊNCIA ============ -->
+<section id="tab-juris" class="panel" role="tabpanel" hidden>
+  <h2>Jurisprudência</h2>
+  <p class="lead">Súmulas, teses de repercussão geral e de recursos repetitivos e entendimentos consolidados. Em “como cai”, o jeito que a banca costuma explorar cada um.</p>
+  <div class="toolbar">
+    <input type="search" id="jQ" placeholder="Buscar (ex.: confissão, 231, tráfico)" aria-label="Buscar na jurisprudência">
+    <select id="jTrib" aria-label="Tribunal"><option value="">STF e STJ</option><option value="STF">Só STF</option><option value="STJ">Só STJ</option></select>
+    <select id="jFase" aria-label="Assunto"></select>
+    <label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="jNew"> Só novidades 2024–2026</label>
+  </div>
+  <div class="small muted" id="jCount" style="margin-bottom:10px"></div>
+  <div class="grid" id="jBox"></div>
+</section>
+
+<!-- ============ SIMULADOR ============ -->
+<section id="tab-simulador" class="panel" role="tabpanel" hidden>
+  <h2>Simulador de dosimetria</h2>
+  <p class="lead">Monte um caso e veja a memória de cálculo fase a fase, com as frações mais usadas pela jurisprudência. Ótimo para treinar as questões de cálculo. Convenção: mês de 30 dias e frações de dia desprezadas (art. 11 do CP).</p>
+  <div class="sim">
+    <div>
+      <div class="card">
+        <h3><span class="ph" style="--c:var(--f0)">0</span>Tipo penal</h3>
+        <div class="row" style="margin-bottom:10px">
+          <label class="field" style="flex:1 1 260px">Modelo
+            <select id="sPreset"></select>
+          </label>
+        </div>
+        <div class="row">
+          <label class="field">Pena mínima
+            <span class="row" style="gap:6px"><input type="number" id="sMinA" min="0" max="99" value="1" aria-label="Anos da pena mínima"> <span class="small">anos</span> <input type="number" id="sMinM" min="0" max="11" value="0" aria-label="Meses da pena mínima"> <span class="small">meses</span></span>
+          </label>
+          <label class="field">Pena máxima
+            <span class="row" style="gap:6px"><input type="number" id="sMaxA" min="0" max="99" value="4" aria-label="Anos da pena máxima"> <span class="small">anos</span> <input type="number" id="sMaxM" min="0" max="11" value="0" aria-label="Meses da pena máxima"> <span class="small">meses</span></span>
+          </label>
+          <label class="field">Espécie
+            <select id="sEsp"><option value="R">Reclusão</option><option value="D">Detenção</option></select>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="ph" style="--c:var(--f1)">1</span>Pena-base · circunstâncias desfavoráveis (art. 59)</h3>
+        <div class="checks" id="sCirc"></div>
+        <div class="row" style="margin-top:10px">
+          <label class="field">Critério por circunstância
+            <select id="sCrit"><option value="8">1/8 do intervalo (máx. − mín.)</option><option value="6">1/6 da pena mínima</option></select>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="ph" style="--c:var(--f2)">2</span>Agravantes e atenuantes (1/6 cada)</h3>
+        <div class="row">
+          <label class="field">Agravantes <input type="number" id="sAg" min="0" max="6" value="0"></label>
+          <label class="field">Atenuantes <input type="number" id="sAt" min="0" max="6" value="0"></label>
+        </div>
+        <p class="small muted" style="margin:10px 0 0">Compensação simples (uma anula a outra). Na prova, lembre da preponderância do art. 67 e do Tema 585 do STJ.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="ph" style="--c:var(--f3)">3</span>Causas de aumento e de diminuição</h3>
+        <div id="sCausas"></div>
+        <div class="row">
+          <select id="sCausaAdd" aria-label="Escolher causa para adicionar"></select>
+          <button class="btn small" type="button" id="sAddBtn">+ Adicionar</button>
+        </div>
+        <p class="small muted" style="margin:10px 0 0">As frações incidem em cascata, cada uma sobre o resultado da anterior.</p>
+      </div>
+
+      <div class="card">
+        <h3><span class="ph" style="--c:var(--accent)">+</span>Concurso de crimes (crimes idênticos)</h3>
+        <div class="row">
+          <label class="field">Tipo
+            <select id="sConc"><option value="">Nenhum</option><option value="formal">Concurso formal próprio (art. 70)</option><option value="cont">Crime continuado (art. 71)</option></select>
+          </label>
+          <label class="field">Nº de crimes <input type="number" id="sConcN" min="2" max="50" value="2"></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="ph" style="--c:var(--f4)">4</span>Dados para regime e benefícios</h3>
+        <div class="checks pos">
+          <label><input type="checkbox" id="sReinc"> Reincidente em crime doloso</label>
+          <label><input type="checkbox" id="sVio"> Violência ou grave ameaça à pessoa</label>
+          <label><input type="checkbox" id="sCulp"> Crime culposo</label>
+          <label><input type="checkbox" id="sIdoso"> Maior de 70 anos ou razões de saúde</label>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <label class="field">Prisão provisória (detração) <span class="row" style="gap:6px"><input type="number" id="sDet" min="0" max="600" value="0"> <span class="small">meses</span></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="result">
+      <div class="card" id="sOut"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 6px"><b>Material de estudo.</b> As frações das 1ª e 2ª fases são construções jurisprudenciais, e o simulador é didático: não substitui a análise do caso concreto. Conteúdo revisado em novembro de 2026; acompanhe os informativos do STF e do STJ.</p>
+    <p style="margin:0">Seu progresso (cards e questões) fica salvo só neste navegador.</p>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const CARDS =[
+{"t":"fundamentos","f":"Qual o sistema de dosimetria adotado pelo Código Penal e onde ele está previsto?","b":"<b>Sistema trifásico</b> (Nelson Hungria), art. 68 do CP:<br>1ª fase – pena-base (art. 59);<br>2ª fase – atenuantes e agravantes;<br>3ª fase – causas de diminuição e de aumento."},
+{"t":"fundamentos","f":"Em que momento entram as qualificadoras na dosimetria?","b":"<b>Antes da 1ª fase.</b> A qualificadora cria novos limites mínimo e máximo (tipo derivado), e a pena-base já é fixada dentro desse novo intervalo. Por isso a circunstância que qualifica não pode ser usada de novo como agravante ou circunstância judicial (bis in idem)."},
+{"t":"fundamentos","f":"Quais princípios constitucionais fundamentam a dosimetria?","b":"<b>Individualização da pena</b> (art. 5º, XLVI, CF) e <b>dever de fundamentação</b> das decisões (art. 93, IX, CF). Toda exasperação exige motivação concreta, não genérica."},
+{"t":"fundamentos","f":"O que o juiz estabelece com base no art. 59 do CP (incisos)?","b":"I – as penas aplicáveis dentre as cominadas;<br>II – a quantidade de pena, dentro dos limites previstos;<br>III – o regime inicial de cumprimento;<br>IV – a substituição da pena privativa de liberdade, se cabível."},
+{"t":"fundamentos","f":"Na dosimetria, o que se faz com as frações de dia?","b":"São <b>desprezadas</b> nas penas privativas de liberdade e restritivas de direitos (art. 11 do CP). Na prática, calcula-se em anos, meses e dias (mês de 30 dias)."},
+{"t":"fundamentos","f":"O juiz pode reconhecer agravante não alegada pelo Ministério Público?","b":"Sim, nos crimes de <b>ação penal pública</b> (art. 385 do CPP). No Júri, o juiz-presidente considera as agravantes e atenuantes <b>alegadas nos debates</b> (art. 492, I, b, do CPP)."},
+{"t":"fase1","f":"Quais são as 8 circunstâncias judiciais do art. 59 do CP?","b":"1. Culpabilidade<br>2. Antecedentes<br>3. Conduta social<br>4. Personalidade do agente<br>5. Motivos<br>6. Circunstâncias do crime<br>7. Consequências do crime<br>8. Comportamento da vítima<br><i>Bizu: 5 C + APM</i>"},
+{"t":"fase1","f":"O que significa “culpabilidade” como circunstância judicial do art. 59?","b":"O <b>grau de reprovabilidade</b> (censura) da conduta concreta. Não se confunde com a culpabilidade como elemento do crime (imputabilidade, potencial consciência da ilicitude e exigibilidade de conduta diversa)."},
+{"t":"fase1","f":"O que caracteriza maus antecedentes?","b":"Condenações criminais <b>definitivas</b> que não geram reincidência. Ex.: fato anterior com trânsito em julgado posterior ao novo crime, ou condenação já alcançada pelo período depurador de 5 anos."},
+{"t":"fase1","f":"Súmula 444 do STJ","b":"É vedada a utilização de <b>inquéritos policiais e ações penais em curso</b> para agravar a pena-base (presunção de inocência)."},
+{"t":"fase1","f":"Súmula 636 do STJ","b":"A <b>folha de antecedentes criminais</b> é documento suficiente para comprovar os maus antecedentes e a reincidência."},
+{"t":"fase1","f":"O período depurador de 5 anos (art. 64, I) vale para os maus antecedentes?","b":"<b>Não.</b> STF, Tema 150 (RE 593.818): não se aplica aos maus antecedentes o prazo quinquenal da reincidência. Condenações antigas podem ser maus antecedentes, cabendo ao juiz avaliar sua relevância no caso concreto."},
+{"t":"fase1","f":"Condenações anteriores podem ser usadas para valorar negativamente a personalidade ou a conduta social?","b":"<b>Não.</b> STJ, Tema 1.077: condenações definitivas não usadas para a reincidência só podem ser valoradas na 1ª fase a título de <b>antecedentes</b>."},
+{"t":"fase1","f":"O que é a “conduta social” do art. 59?","b":"O comportamento do agente na comunidade, na família e no trabalho. É diferente dos antecedentes (vida pregressa criminal) e exige elementos concretos nos autos."},
+{"t":"fase1","f":"Como se valora negativamente a personalidade do agente?","b":"Com base em <b>elementos concretos</b> dos autos que revelem, por exemplo, agressividade, insensibilidade ou perfil voltado ao crime. Não servem condenações anteriores (Tema 1.077 do STJ) nem afirmações genéricas."},
+{"t":"fase1","f":"Motivo inerente ao tipo pode elevar a pena-base? Ex.: “lucro fácil” no furto.","b":"<b>Não.</b> Valorar elemento já ínsito ao tipo é bis in idem. O motivo só pesa se extrapolar o normal da espécie."},
+{"t":"fase1","f":"O que se analisa em “circunstâncias do crime”?","b":"O <b>modus operandi</b>: tempo, lugar, meios, instrumentos e forma de execução, desde que não sejam elementares, qualificadoras ou majorantes já aplicadas."},
+{"t":"fase1","f":"O que se analisa em “consequências do crime”? Dê um exemplo atual.","b":"Efeitos que <b>extrapolam o resultado típico</b>, como prejuízo elevado ou trauma grave. Ex.: homicídio de vítima que deixa filhos menores — STJ, <b>Tema 1.394</b> (2026): é válida a exasperação da pena-base."},
+{"t":"fase1","f":"O comportamento da vítima pode aumentar a pena-base?","b":"<b>Não.</b> Ou é favorável ao réu (a vítima contribuiu ou provocou) ou é neutro. Nunca prejudica o réu."},
+{"t":"fase1","f":"Qual a fração de aumento na 1ª fase por circunstância judicial negativa?","b":"Não há fração legal. O STJ aceita <b>1/6 sobre a pena mínima</b> ou <b>1/8 sobre o intervalo</b> entre a mínima e a máxima, por circunstância. Outra fração exige fundamentação concreta."},
+{"t":"fase1","f":"A pena-base pode ficar abaixo do mínimo ou acima do máximo?","b":"<b>Não.</b> Na 1ª fase, a pena-base fica sempre dentro dos limites cominados (do tipo simples ou qualificado)."},
+{"t":"fase1","f":"Havendo duas ou mais qualificadoras, como o juiz deve proceder?","b":"Uma qualifica o crime; as demais podem ser usadas como <b>agravantes</b> (se previstas nos arts. 61 e 62) ou, residualmente, como <b>circunstâncias judiciais</b> na pena-base."},
+{"t":"fase2","f":"O rol de agravantes é taxativo? E o de atenuantes?","b":"Agravantes: <b>taxativo</b> (arts. 61 e 62). Atenuantes: <b>exemplificativo</b>, pois o art. 66 admite a atenuante inominada."},
+{"t":"fase2","f":"Quando a agravante não incide, segundo o caput do art. 61?","b":"Quando a circunstância <b>constitui ou qualifica o crime</b>. Ex.: o motivo torpe no homicídio já qualificado pelo motivo torpe."},
+{"t":"fase2","f":"Qual a fração usual de cada agravante ou atenuante?","b":"<b>1/6</b> (construção jurisprudencial; a lei não fixa fração). Fração maior exige fundamentação concreta."},
+{"t":"fase2","f":"Súmula 231 do STJ","b":"A incidência de circunstância <b>atenuante</b> não pode conduzir à redução da pena <b>abaixo do mínimo legal</b>. Mantida pela 3ª Seção em 2024; o STF tem a mesma tese (Tema 158 RG)."},
+{"t":"fase2","f":"As agravantes podem levar a pena acima do máximo cominado?","b":"<b>Não.</b> Na 2ª fase, a pena fica entre o mínimo e o máximo. Só as causas de aumento e de diminuição (3ª fase) rompem esses limites."},
+{"t":"fase2","f":"Conceito de reincidência (art. 63 do CP)","b":"Cometer <b>novo crime depois do trânsito em julgado</b> da sentença que, no Brasil ou no estrangeiro, condenou o agente por crime anterior."},
+{"t":"fase2","f":"Qual o período depurador da reincidência (art. 64, I)?","b":"<b>5 anos</b> entre o cumprimento ou a extinção da pena e a nova infração, computado o período de prova do sursis ou do livramento condicional, se não houver revogação."},
+{"t":"fase2","f":"Quais crimes anteriores não geram reincidência (art. 64, II)?","b":"Os crimes <b>militares próprios</b> e os crimes <b>políticos</b>."},
+{"t":"fase2","f":"Reincidência e contravenção (art. 63 do CP e art. 7º da LCP): quais combinações geram reincidência?","b":"Crime → crime: SIM<br>Crime → contravenção: SIM<br>Contravenção (no Brasil) → contravenção: SIM<br>Contravenção → crime: <b>NÃO</b> (pode configurar maus antecedentes)."},
+{"t":"fase2","f":"Súmula 241 do STJ","b":"A reincidência penal não pode ser considerada como agravante e, <b>simultaneamente</b>, como circunstância judicial (bis in idem)."},
+{"t":"fase2","f":"Réu com duas condenações definitivas anteriores aptas à reincidência: como o juiz pode usá-las?","b":"Uma como <b>maus antecedentes</b> (1ª fase) e outra como <b>reincidência</b> (2ª fase). Não há bis in idem, porque são condenações distintas."},
+{"t":"fase2","f":"A sentença que concede perdão judicial gera reincidência?","b":"<b>Não</b> (art. 120 do CP)."},
+{"t":"fase2","f":"Condenação anterior só à pena de multa gera reincidência?","b":"<b>Sim</b>, gera reincidência, mas não impede o sursis (art. 77, § 1º)."},
+{"t":"fase2","f":"As agravantes se aplicam aos crimes culposos?","b":"Em regra, só a <b>reincidência</b>. As agravantes do art. 61, II, pressupõem dolo (posição majoritária). O STF já admitiu exceção, com o motivo torpe em homicídio culposo (caso Bateau Mouche)."},
+{"t":"fase2","f":"Quais as agravantes no concurso de pessoas (art. 62)?","b":"Agente que:<br>I – promove ou organiza a cooperação, ou dirige os demais;<br>II – coage ou induz outrem à execução;<br>III – instiga ou determina quem está sob sua autoridade ou não é punível;<br>IV – executa ou participa mediante paga ou promessa de recompensa."},
+{"t":"fase2","f":"Quais as atenuantes do art. 65 do CP?","b":"I – menor de 21 (na data do fato) ou maior de 70 (na data da sentença);<br>II – desconhecimento da lei;<br>III – a) relevante valor social ou moral; b) evitar ou minorar as consequências, ou reparar o dano antes do julgamento; c) coação resistível, ordem de superior ou violenta emoção provocada por ato injusto da vítima; d) <b>confissão espontânea</b>; e) multidão em tumulto que não provocou."},
+{"t":"fase2","f":"Atenuante etária: qual o marco temporal de cada idade?","b":"<b>Menor de 21 anos na data do FATO</b>; <b>maior de 70 anos na data da SENTENÇA</b> (a primeira decisão condenatória)."},
+{"t":"fase2","f":"A atenuante da menoridade relativa foi revogada pelo Código Civil de 2002?","b":"<b>Não.</b> Continua aplicável; a maioridade civil não afeta a atenuante penal. A prova exige documento hábil (Súmula 74 do STJ)."},
+{"t":"fase2","f":"O que é a atenuante inominada (art. 66)? Dê um exemplo doutrinário.","b":"Circunstância <b>relevante, anterior ou posterior ao crime</b>, não prevista expressamente em lei. Ex.: <b>coculpabilidade</b> (Zaffaroni), a corresponsabilidade do Estado pela exclusão social do agente."},
+{"t":"fase2","f":"Confissão espontânea: o que mudou com o Tema 1.194 do STJ (2025)?","b":"A confissão atenua a pena <b>independentemente de ter sido usada</b> no convencimento do juiz e mesmo havendo outras provas, desde que não haja retratação (salvo se a confissão retratada serviu à apuração dos fatos). A Súmula 545 foi revisada nesse sentido."},
+{"t":"fase2","f":"A confissão qualificada (admite o fato, mas alega excludente) atenua a pena? (Tema 1.194)","b":"<b>Sim, mas em menor proporção</b>, e não é considerada preponderante no concurso com agravantes. O mesmo vale quando o fato confessado tem tipificação com pena menor."},
+{"t":"drogas","f":"Súmula 630 do STJ (revisada em 2025): tráfico e confissão de uso próprio","b":"Se o acusado admite a posse ou propriedade da droga para <b>uso próprio</b>, negando a traficância, a atenuante da confissão incide em <b>proporção inferior</b> à da confissão plena. (Antes da revisão, não incidia.)"},
+{"t":"fase2","f":"Quais são as circunstâncias preponderantes (art. 67)?","b":"As que resultam dos <b>motivos determinantes</b> do crime, da <b>personalidade do agente</b> e da <b>reincidência</b>."},
+{"t":"fase2","f":"Confissão x reincidência: há compensação? (STJ, Tema 585 revisado)","b":"Sim, <b>compensação integral</b>, mesmo se a reincidência for específica. Na <b>multirreincidência</b>, a reincidência prepondera e a compensação é apenas proporcional. Atenção: o STF tem precedentes pela preponderância da reincidência."},
+{"t":"fase3","f":"Qual a principal característica das causas de aumento e de diminuição?","b":"São expressas em <b>frações</b> (fixas ou variáveis) e <b>podem levar a pena abaixo do mínimo ou acima do máximo</b> cominado."},
+{"t":"fase3","f":"Concurso de causas de aumento ou de diminuição da PARTE ESPECIAL (art. 68, parágrafo único)","b":"O juiz <b>pode</b> limitar-se a um só aumento ou a uma só diminuição, prevalecendo a causa que mais aumente ou diminua. É faculdade, não dever."},
+{"t":"fase3","f":"E se as causas forem da PARTE GERAL (ex.: tentativa + participação de menor importância)?","b":"Aplicam-se <b>todas</b>. O art. 68, parágrafo único, só alcança as causas da Parte Especial."},
+{"t":"fase3","f":"Como incidem várias frações na 3ª fase?","b":"Pelo método <b>sucessivo (em cascata)</b>: cada fração incide sobre a pena já modificada pela anterior. A ordem não altera o resultado. O STJ afetou o tema como repetitivo (<b>Tema 1.422</b>, pendente)."},
+{"t":"fase3","f":"Tentativa: fração e critério (art. 14, parágrafo único)","b":"Redução de <b>1/3 a 2/3</b>. Critério: o <b>iter criminis</b> percorrido. Quanto mais perto da consumação, menor a redução."},
+{"t":"fase3","f":"Arrependimento posterior (art. 16): requisitos e fração","b":"Crime sem violência ou grave ameaça à pessoa; reparação do dano ou restituição da coisa; ato voluntário; até o <b>recebimento</b> da denúncia ou queixa. Redução de <b>1/3 a 2/3</b>."},
+{"t":"fase3","f":"Semi-imputabilidade (art. 26, parágrafo único): fração","b":"Redução de <b>1/3 a 2/3</b>, ou substituição por medida de segurança (art. 98)."},
+{"t":"fase3","f":"Participação de menor importância (art. 29, § 1º): fração","b":"Redução de <b>1/6 a 1/3</b>."},
+{"t":"fase3","f":"Erro de proibição evitável (art. 21): fração","b":"Redução de <b>1/6 a 1/3</b>. Se inevitável, isenta de pena."},
+{"t":"fase3","f":"Súmula 443 do STJ","b":"No roubo circunstanciado, o aumento na 3ª fase exige <b>fundamentação concreta</b>; não basta a mera indicação do <b>número de majorantes</b>."},
+{"t":"fase3","f":"Majorantes do roubo (art. 157): frações","b":"§ 2º: <b>1/3 até metade</b> (concurso de agentes, restrição da liberdade da vítima etc.);<br>§ 2º-A: <b>2/3</b> (arma de fogo; explosivo);<br>§ 2º-B: <b>dobro</b> (arma de fogo de uso restrito ou proibido)."},
+{"t":"fase3","f":"Pluralidade de majorantes no roubo: o que o STJ admite?","b":"Aplicar uma na 3ª fase e <b>deslocar as sobressalentes</b> para a 1ª fase (como circunstâncias judiciais), sem bis in idem e com fundamentação."},
+{"t":"fase3","f":"Súmula 442 do STJ","b":"É inadmissível aplicar, no <b>furto qualificado pelo concurso de agentes</b>, a majorante do roubo."},
+{"t":"drogas","f":"Art. 42 da Lei 11.343/06","b":"Na fixação da pena, o juiz considera, <b>com preponderância</b> sobre o art. 59 do CP, a <b>natureza e a quantidade</b> da droga, a <b>personalidade</b> e a <b>conduta social</b> do agente."},
+{"t":"drogas","f":"Tráfico privilegiado (art. 33, § 4º, da Lei 11.343/06): requisitos e fração","b":"Redução de <b>1/6 a 2/3</b> se o agente for primário, de bons antecedentes, não se dedicar a atividades criminosas e não integrar organização criminosa (requisitos cumulativos)."},
+{"t":"drogas","f":"STF, Tema 712: natureza e quantidade da droga","b":"Devem ser consideradas em <b>apenas uma das fases</b> da dosimetria (na 1ª fase ou na modulação do § 4º), sob pena de bis in idem."},
+{"t":"drogas","f":"STJ, Tema 1.139","b":"É vedado usar <b>inquéritos e/ou ações penais em curso</b> para impedir a aplicação do tráfico privilegiado (art. 33, § 4º)."},
+{"t":"drogas","f":"O tráfico privilegiado é crime hediondo?","b":"<b>Não</b> (STF, HC 118.533; a Súmula 512 do STJ foi cancelada). Hoje há previsão expressa no art. 112, § 5º, da LEP."},
+{"t":"drogas","f":"É possível substituir a pena do tráfico por restritivas de direitos?","b":"<b>Sim</b>, se preenchidos os requisitos do art. 44. O STF declarou inconstitucional a vedação (HC 97.256), e o Senado suspendeu a expressão (Resolução 5/2012)."},
+{"t":"regime","f":"Regime inicial pela quantidade de pena (art. 33, § 2º)","b":"Mais de 8 anos: <b>fechado</b><br>Mais de 4 até 8 (não reincidente): <b>semiaberto</b><br>Até 4 (não reincidente): <b>aberto</b><br>Sempre observando o art. 59 (§ 3º)."},
+{"t":"regime","f":"A pena de detenção pode começar no regime fechado?","b":"<b>Não.</b> A detenção começa no semiaberto ou no aberto; o fechado só por regressão (art. 33, caput)."},
+{"t":"regime","f":"Súmula 269 do STJ","b":"É admissível o regime <b>semiaberto</b> aos <b>reincidentes</b> condenados a pena <b>igual ou inferior a 4 anos</b>, se <b>favoráveis</b> as circunstâncias judiciais."},
+{"t":"regime","f":"Súmula 440 do STJ","b":"Fixada a pena-base no mínimo legal, é vedado regime mais gravoso do que o cabível pela pena, com base apenas na <b>gravidade abstrata</b> do delito."},
+{"t":"regime","f":"Súmulas 718 e 719 do STF","b":"718: a opinião do julgador sobre a <b>gravidade em abstrato</b> do crime não é motivação idônea para regime mais severo.<br>719: regime mais severo que o permitido pela pena exige <b>motivação idônea</b>."},
+{"t":"regime","f":"Detração para fins de regime (art. 387, § 2º, do CPP)","b":"O tempo de <b>prisão provisória</b>, prisão administrativa ou internação é computado já na sentença, <b>para fixar o regime inicial</b>."},
+{"t":"regime","f":"Crime hediondo impõe regime inicial fechado?","b":"<b>Não.</b> O STF declarou inconstitucional o art. 2º, § 1º, da Lei 8.072/90 (HC 111.840; Tema 972 RG). O regime segue o art. 33 do CP."},
+{"t":"regime","f":"Requisitos da substituição por penas restritivas de direitos (art. 44)","b":"I – pena até 4 anos e crime sem violência ou grave ameaça à pessoa, ou crime culposo (qualquer pena);<br>II – réu não reincidente em crime doloso;<br>III – circunstâncias judiciais favoráveis."},
+{"t":"regime","f":"Quantas penas substitutivas, conforme a pena aplicada (art. 44, § 2º)?","b":"Até 1 ano: <b>multa ou 1 restritiva de direitos</b>.<br>Mais de 1 ano: <b>1 restritiva + multa ou 2 restritivas</b>."},
+{"t":"regime","f":"O reincidente pode ter a pena substituída (art. 44, § 3º)?","b":"Sim, se a medida for <b>socialmente recomendável</b> e a reincidência <b>não</b> tiver ocorrido pela prática do <b>mesmo crime</b>."},
+{"t":"regime","f":"Súmula 588 do STJ","b":"Crime ou contravenção contra a <b>mulher</b>, com violência ou grave ameaça, no ambiente <b>doméstico</b>, impede a substituição por restritiva de direitos."},
+{"t":"regime","f":"Requisitos do sursis simples (art. 77)","b":"Pena <b>até 2 anos</b>; não reincidente em crime doloso; circunstâncias judiciais favoráveis; não cabível a substituição do art. 44. Período de prova: <b>2 a 4 anos</b>."},
+{"t":"regime","f":"Sursis etário e humanitário (art. 77, § 2º)","b":"Pena <b>até 4 anos</b>, condenado <b>maior de 70 anos</b> ou razões de saúde. Período de prova: <b>4 a 6 anos</b>."},
+{"t":"concurso","f":"Pena de multa: sistema e limites (arts. 49 e 60)","b":"Sistema <b>bifásico</b>: 1) número de dias-multa, de <b>10 a 360</b>; 2) valor do dia-multa, de <b>1/30 a 5 salários mínimos</b>, conforme a situação econômica. Pode ser aumentada <b>até o triplo</b> (art. 60, § 1º)."},
+{"t":"concurso","f":"Concurso material (art. 69)","b":"Mais de uma ação ou omissão, dois ou mais crimes: <b>somam-se as penas</b>. Com reclusão e detenção, executa-se primeiro a reclusão."},
+{"t":"concurso","f":"Concurso formal próprio x impróprio (art. 70)","b":"<b>Próprio</b>: uma ação, vários crimes → a pena mais grave + <b>1/6 até 1/2</b>.<br><b>Impróprio</b>: ação dolosa com <b>desígnios autônomos</b> → penas <b>somadas</b>."},
+{"t":"concurso","f":"Fração no concurso formal próprio conforme o número de crimes","b":"2 crimes: 1/6 · 3: 1/5 · 4: 1/4 · 5: 1/3 · 6 ou mais: 1/2."},
+{"t":"concurso","f":"Súmula 659 do STJ (crime continuado)","b":"2 crimes: <b>1/6</b> · 3: <b>1/5</b> · 4: <b>1/4</b> · 5: <b>1/3</b> · 6: <b>1/2</b> · 7 ou mais: <b>2/3</b>."},
+{"t":"concurso","f":"Crime continuado específico (art. 71, parágrafo único)","b":"Crimes dolosos, contra vítimas diferentes, com violência ou grave ameaça: aumento <b>até o triplo</b>, considerando as circunstâncias judiciais."},
+{"t":"concurso","f":"O que é o concurso material benéfico?","b":"No concurso formal e no crime continuado, a pena <b>não pode exceder</b> a que resultaria da soma do art. 69 (arts. 70, parágrafo único, e 71, parágrafo único)."},
+{"t":"concurso","f":"Multa no concurso de crimes (art. 72)","b":"As multas são aplicadas <b>distinta e integralmente</b>. Para o STJ, a regra não se aplica ao <b>crime continuado</b>, em que a multa segue o aumento da continuidade."},
+{"t":"concurso","f":"Limite de cumprimento das penas (art. 75) e Súmula 715 do STF","b":"<b>40 anos</b> (Lei 13.964/19). A pena unificada para esse limite <b>não</b> é a base para benefícios como livramento condicional e progressão (Súmula 715, editada quando o limite era de 30 anos)."},
+{"t":"concurso","f":"Prescrição no crime continuado (Súmula 497 do STF)","b":"Regula-se pela pena imposta na sentença, <b>sem o acréscimo</b> da continuação. No concurso de crimes, a prescrição incide sobre a pena de cada crime isoladamente (art. 119)."},
+{"t":"concurso","f":"Qual a ordem de trabalho no concurso de crimes?","b":"Primeiro se dosa <b>cada crime separadamente</b>, nas três fases; só depois se aplica a regra do concurso (soma ou exasperação)."},
+{"t":"concurso","f":"Concurso formal e crime continuado no mesmo contexto: aplicam-se os dois aumentos?","b":"Para o STJ, <b>não</b>: aplica-se apenas o aumento da continuidade delitiva, para evitar bis in idem."}
+]
+;
+/* ===================== QUESTÕES ===================== */
+const QUESTOES = [
+{tipo:'me', tema:'fundamentos', enun:`Segundo o art. 68 do Código Penal, a ordem correta das fases da dosimetria da pena privativa de liberdade é:`,
+ alts:[`atenuantes e agravantes; pena-base; causas de diminuição e de aumento.`,`pena-base; causas de diminuição e de aumento; atenuantes e agravantes.`,`pena-base (art. 59); atenuantes e agravantes; causas de diminuição e de aumento.`,`causas de diminuição e de aumento; pena-base; atenuantes e agravantes.`,`pena-base; regime inicial; atenuantes e agravantes.`],
+ resp:2, exp:`O CP adota o sistema trifásico de Nelson Hungria: primeiro a pena-base pelas circunstâncias judiciais, depois as atenuantes e agravantes e, por último, as causas de diminuição e de aumento. Regime e substituição vêm depois da pena definitiva.`, fund:`Art. 68, caput, do CP.`},
+{tipo:'ce', tema:'fase2', enun:`Segundo entendimento sumulado do STJ, a atenuante da confissão espontânea pode reduzir a pena abaixo do mínimo legal, desde que a redução seja devidamente fundamentada.`,
+ resp:false, exp:`Errado. Atenuante não leva a pena abaixo do mínimo legal (Súmula 231). A 3ª Seção do STJ rejeitou a proposta de revisão em 2024, e o STF tem a mesma tese em repercussão geral.`, fund:`Súmula 231 do STJ; STF, Tema 158 (RE 597.270).`},
+{tipo:'ce', tema:'fase3', enun:`As causas de diminuição de pena, aplicadas na terceira fase da dosimetria, podem levar a pena abaixo do mínimo legal cominado ao tipo.`,
+ resp:true, exp:`Certo. Só as 1ª e 2ª fases ficam presas aos limites cominados. As causas de aumento e de diminuição da 3ª fase podem romper o mínimo e o máximo (ex.: tentativa).`, fund:`Art. 68 do CP; Súmula 231 do STJ (a contrario sensu).`},
+{tipo:'me', tema:'fase1', enun:`Réu responde a três ações penais ainda sem trânsito em julgado e a dois inquéritos policiais. Na fixação da pena-base, o juiz:`,
+ alts:[`pode considerá-los maus antecedentes, se forem crimes da mesma natureza.`,`pode valorá-los como personalidade voltada para o crime.`,`não pode utilizá-los para agravar a pena-base.`,`pode usá-los como conduta social negativa.`,`deve considerá-los para fins de reincidência.`],
+ resp:2, exp:`Inquéritos e ações penais em curso não podem agravar a pena-base, por respeito à presunção de inocência. Também não servem para personalidade ou conduta social, e reincidência exige condenação anterior transitada em julgado.`, fund:`Súmula 444 do STJ; art. 5º, LVII, da CF; art. 63 do CP.`},
+{tipo:'ce', tema:'fase2', enun:`Se o réu tem duas condenações definitivas anteriores, ambas aptas a gerar reincidência, o juiz pode usar uma como maus antecedentes, na primeira fase, e a outra como agravante da reincidência, na segunda fase, sem bis in idem.`,
+ resp:true, exp:`Certo. Como são condenações distintas, não há dupla valoração do mesmo fato. O que a Súmula 241 proíbe é usar a mesma condenação nas duas fases.`, fund:`Jurisprudência pacífica do STJ; Súmula 241 do STJ.`},
+{tipo:'ce', tema:'fase2', enun:`Uma única condenação anterior transitada em julgado pode ser considerada, ao mesmo tempo, como maus antecedentes e como agravante da reincidência.`,
+ resp:false, exp:`Errado. Seria bis in idem: a mesma condenação não pode pesar na 1ª e na 2ª fase.`, fund:`Súmula 241 do STJ.`},
+{tipo:'me', tema:'fase1', enun:`João foi condenado definitivamente por furto, e a pena foi extinta pelo cumprimento em 2015. Em 2024, praticou estelionato. Na dosimetria do novo crime, essa condenação anterior:`,
+ alts:[`gera reincidência, pois a condenação foi definitiva.`,`não gera reincidência, mas pode ser valorada como maus antecedentes.`,`não pode ser considerada para nenhum fim, por força do período depurador.`,`gera reincidência e também maus antecedentes.`,`só pode ser valorada como personalidade negativa.`],
+ resp:1, exp:`Passaram-se mais de 5 anos entre a extinção da pena e o novo crime, então não há reincidência (período depurador). Para o STF, porém, esse prazo não vale para os maus antecedentes, que podem ser reconhecidos.`, fund:`Art. 64, I, do CP; STF, Tema 150 (RE 593.818); STJ, Tema 1.077.`},
+{tipo:'ce', tema:'fase1', enun:`Conforme o STJ, condenações criminais transitadas em julgado e não utilizadas para caracterizar a reincidência podem ser empregadas para valorar negativamente a personalidade e a conduta social do agente.`,
+ resp:false, exp:`Errado. Essas condenações só podem ser valoradas na 1ª fase a título de antecedentes criminais.`, fund:`STJ, Tema 1.077 (recurso repetitivo).`},
+{tipo:'me', tema:'fase1', enun:`Num roubo, a vítima em nada contribuiu para a prática do delito. Quanto à circunstância judicial do comportamento da vítima, o juiz deve:`,
+ alts:[`valorá-la negativamente, pois a vítima não deu causa ao crime.`,`considerá-la neutra, sem elevar a pena-base.`,`aumentar a pena-base em 1/6.`,`considerá-la como agravante genérica.`,`usá-la para fixar regime mais gravoso.`],
+ resp:1, exp:`O comportamento da vítima só pode ser neutro ou favorável ao réu. O fato de a vítima não ter contribuído não autoriza aumentar a pena.`, fund:`Art. 59 do CP; jurisprudência consolidada do STJ.`},
+{tipo:'me', tema:'fase2', enun:`Nos termos do art. 67 do CP, no concurso de agravantes e atenuantes, a pena deve aproximar-se do limite indicado pelas circunstâncias preponderantes, que são as que resultam:`,
+ alts:[`da culpabilidade, dos antecedentes e da conduta social.`,`dos motivos determinantes, da personalidade do agente e da reincidência.`,`das consequências do crime, do comportamento da vítima e da confissão.`,`da menoridade, da confissão e da reincidência.`,`dos motivos, das circunstâncias e das consequências do crime.`],
+ resp:1, exp:`O art. 67 aponta como preponderantes os motivos determinantes, a personalidade do agente e a reincidência (bizu: MPR).`, fund:`Art. 67 do CP.`},
+{tipo:'ce', tema:'fase2', enun:`Segundo a tese revisada do Tema 585 do STJ, é possível compensar integralmente a confissão espontânea com a reincidência, ainda que específica. Na multirreincidência, a reincidência prepondera, admitindo-se só compensação proporcional.`,
+ resp:true, exp:`Certo. É a tese revisada do Tema 585. Atenção: no STF há precedentes que reconhecem a preponderância da reincidência sobre a confissão.`, fund:`STJ, Tema 585 (revisado); arts. 61, I, 65, III, d, e 67 do CP.`},
+{tipo:'me', tema:'drogas', enun:`Acusado de tráfico admite em juízo que a droga apreendida era sua, mas afirma que se destinava a uso próprio, negando a traficância. De acordo com a Súmula 630 do STJ, revisada no julgamento do Tema 1.194 (2025):`,
+ alts:[`não incide a atenuante, pois não houve confissão da traficância.`,`incide a atenuante, porém em proporção inferior à da confissão plena.`,`incide a atenuante de 1/6, que prepondera sobre a reincidência.`,`incide causa de diminuição de 1/6 a 2/3.`,`a confissão só atenua se tiver sido utilizada na sentença.`],
+ resp:1, exp:`Pela redação antiga, a mera admissão da posse para uso próprio não atenuava (alternativa A, hoje desatualizada). Com a revisão, a atenuante incide, mas em proporção menor que a da confissão plena.`, fund:`Súmula 630 do STJ (revisada); STJ, Tema 1.194 (REsp 2.001.973/RS, 2025).`},
+{tipo:'ce', tema:'fase2', enun:`A atenuante da menoridade relativa (agente menor de 21 anos na data do fato) foi tacitamente revogada pelo Código Civil de 2002, que reduziu a maioridade civil para 18 anos.`,
+ resp:false, exp:`Errado. A atenuante continua em vigor; a maioridade civil não interfere na regra penal.`, fund:`Art. 65, I, do CP; Súmula 74 do STJ.`},
+{tipo:'me', tema:'fase2', enun:`A atenuante etária do art. 65, I, do CP aplica-se ao agente:`,
+ alts:[`menor de 21 anos na data da sentença ou maior de 70 na data do fato.`,`menor de 18 anos na data do fato ou maior de 60 na data da sentença.`,`menor de 21 anos na data do fato ou maior de 70 anos na data da sentença.`,`menor de 21 ou maior de 70 anos, ambos na data do fato.`,`maior de 60 anos na data do fato.`],
+ resp:2, exp:`Jovem na hora do fato (menor de 21) e idoso na hora da sentença (maior de 70). Cuidado: 60 anos é a agravante do art. 61, II, h (crime contra maior de 60).`, fund:`Art. 65, I, do CP.`},
+{tipo:'ce', tema:'fundamentos', enun:`Nos crimes de ação penal pública, o juiz pode reconhecer agravantes, ainda que nenhuma tenha sido alegada pela acusação.`,
+ resp:true, exp:`Certo, é a literalidade do art. 385 do CPP.`, fund:`Art. 385 do CPP.`},
+{tipo:'ce', tema:'fundamentos', enun:`No Tribunal do Júri, o juiz-presidente, ao proferir a sentença condenatória, considerará as agravantes e atenuantes alegadas nos debates.`,
+ resp:true, exp:`Certo. No Júri, as agravantes e atenuantes precisam ter sido alegadas nos debates.`, fund:`Art. 492, I, b, do CPP.`},
+{tipo:'me', tema:'fase3', enun:`Num crime incidem duas causas de aumento, ambas previstas na Parte Especial. Nos termos do art. 68, parágrafo único, do CP, o juiz:`,
+ alts:[`deve obrigatoriamente aplicar as duas, de forma cumulativa.`,`pode limitar-se a um só aumento, prevalecendo a causa que mais aumente.`,`deve aplicar apenas a de menor fração, por favorecer o réu.`,`deve somar as frações e aplicá-las sobre a pena-base.`,`deve converter uma delas em agravante genérica.`],
+ resp:1, exp:`É uma faculdade do juiz: limitar-se a um só aumento, prevalecendo o maior. A regra vale apenas para causas da Parte Especial.`, fund:`Art. 68, parágrafo único, do CP.`},
+{tipo:'ce', tema:'fase3', enun:`No roubo circunstanciado, o aumento na terceira fase pode ser fundamentado exclusivamente no número de majorantes reconhecidas.`,
+ resp:false, exp:`Errado. O aumento exige fundamentação concreta; a mera contagem de majorantes não basta.`, fund:`Súmula 443 do STJ.`},
+{tipo:'me', tema:'calculo', enun:`Furto simples (art. 155: reclusão de 1 a 4 anos). O juiz reconhece duas circunstâncias judiciais desfavoráveis, usando 1/8 do intervalo entre as penas mínima e máxima para cada uma. Na segunda fase, reconhece a confissão espontânea (1/6). A pena intermediária será de:`,
+ alts:[`1 ano e 9 meses.`,`1 ano, 5 meses e 15 dias.`,`1 ano e 3 meses.`,`1 ano (mínimo legal).`,`1 ano, 7 meses e 15 dias.`],
+ resp:1, exp:`Intervalo: 4 − 1 = 3 anos = 36 meses. 1/8 de 36 = 4 meses e 15 dias; duas circunstâncias = 9 meses. Pena-base: 1 ano e 9 meses (21 meses). Confissão: 1/6 de 21 = 3 meses e 15 dias. Pena intermediária: 21 − 3,5 = 17,5 meses = 1 ano, 5 meses e 15 dias (acima do mínimo, então sem problema com a Súmula 231).`, fund:`Arts. 59, 65, III, d, e 68 do CP.`},
+{tipo:'me', tema:'calculo', enun:`Homicídio simples tentado (art. 121: 6 a 20 anos) contra o próprio pai. Pena-base no mínimo; agravante do art. 61, II, e (contra ascendente), na fração de 1/6; redução da tentativa em 1/3. A pena definitiva será de:`,
+ alts:[`4 anos.`,`4 anos e 8 meses.`,`5 anos e 4 meses.`,`7 anos.`,`2 anos e 4 meses.`],
+ resp:1, exp:`1ª fase: 6 anos. 2ª fase: 6 + 1/6 (1 ano) = 7 anos. 3ª fase: 7 − 1/3 (2 anos e 4 meses) = 4 anos e 8 meses (84 meses × 2/3 = 56 meses).`, fund:`Arts. 14, parágrafo único, 61, II, e, e 68 do CP.`},
+{tipo:'ce', tema:'regime', enun:`Fixada a pena-base no mínimo legal, é vedado impor regime prisional mais gravoso do que o cabível pela pena aplicada com base apenas na gravidade abstrata do delito.`,
+ resp:true, exp:`Certo. Regime mais gravoso exige fundamentação concreta; a gravidade abstrata do tipo não basta.`, fund:`Súmula 440 do STJ; Súmulas 718 e 719 do STF.`},
+{tipo:'me', tema:'regime', enun:`Réu reincidente é condenado a 3 anos de reclusão, com todas as circunstâncias judiciais favoráveis. Segundo a jurisprudência sumulada do STJ, o regime inicial adequado é o:`,
+ alts:[`aberto, pois a pena não excede 4 anos.`,`semiaberto.`,`fechado, obrigatoriamente, pela reincidência.`,`fechado, salvo se houver confissão.`,`aberto, com substituição obrigatória.`],
+ resp:1, exp:`O reincidente não tem direito ao aberto (art. 33, § 2º, c), mas, com pena até 4 anos e circunstâncias favoráveis, cabe o semiaberto.`, fund:`Súmula 269 do STJ; art. 33, § 2º, do CP.`},
+{tipo:'me', tema:'regime', enun:`Réu primário, com circunstâncias judiciais favoráveis, é condenado a 8 anos e 6 meses de reclusão e ficou preso preventivamente por 10 meses. Considerando o art. 387, § 2º, do CPP, o regime inicial pode ser o:`,
+ alts:[`fechado, pois a pena aplicada supera 8 anos.`,`semiaberto, pois, descontada a prisão provisória, o restante não supera 8 anos.`,`aberto, pois o restante é inferior a 8 anos.`,`fechado, pois a detração só ocorre na execução.`,`semiaberto apenas se houver reparação do dano.`],
+ resp:1, exp:`A detração é considerada já na sentença para fixar o regime: 8 anos e 6 meses − 10 meses = 7 anos e 8 meses. Entre 4 e 8 anos, o réu primário pode começar no semiaberto.`, fund:`Art. 387, § 2º, do CPP; art. 33, § 2º, b, do CP.`},
+{tipo:'ce', tema:'regime', enun:`Por força da Lei 8.072/90, o condenado por crime hediondo deve, obrigatoriamente, iniciar o cumprimento da pena em regime fechado.`,
+ resp:false, exp:`Errado. O STF declarou inconstitucional o regime inicial fechado obrigatório. Vale o art. 33 do CP.`, fund:`STF, HC 111.840 e Tema 972 RG (ARE 1.052.700).`},
+{tipo:'me', tema:'regime', enun:`Em qual das hipóteses abaixo cabe, em tese, a substituição da pena privativa de liberdade por restritivas de direitos?`,
+ alts:[`Roubo simples, pena de 4 anos, réu primário.`,`Lesão corporal contra a companheira, no âmbito doméstico, pena de 6 meses.`,`Furto qualificado, pena de 2 anos e 4 meses, réu primário, circunstâncias judiciais favoráveis.`,`Estelionato, pena de 5 anos, réu primário.`,`Furto simples, réu reincidente específico em furto, pena de 1 ano e 2 meses.`],
+ resp:2, exp:`A) roubo tem violência ou grave ameaça; B) Súmula 588; D) pena acima de 4 anos; E) reincidência no mesmo crime impede a exceção do § 3º. Só a C preenche os requisitos.`, fund:`Art. 44, I a III e § 3º, do CP; Súmula 588 do STJ.`},
+{tipo:'ce', tema:'regime', enun:`A prática de crime ou contravenção penal contra a mulher, com violência ou grave ameaça, no ambiente doméstico, impossibilita a substituição da pena privativa de liberdade por restritiva de direitos.`,
+ resp:true, exp:`Certo. É o texto da Súmula 588 do STJ, que alcança inclusive as contravenções.`, fund:`Súmula 588 do STJ.`},
+{tipo:'me', tema:'regime', enun:`Sobre a suspensão condicional da pena (sursis), assinale a alternativa correta.`,
+ alts:[`Cabe para penas de até 4 anos, em qualquer caso.`,`A condenação anterior à pena de multa não impede a concessão do benefício.`,`O período de prova do sursis simples é de 1 a 3 anos.`,`Tem preferência sobre a substituição por restritivas de direitos.`,`O reincidente em crime doloso pode obtê-lo se as circunstâncias forem favoráveis.`],
+ resp:1, exp:`É o § 1º do art. 77. A) só até 2 anos, salvo o etário ou humanitário; C) são 2 a 4 anos; D) o sursis é subsidiário à substituição; E) o reincidente em crime doloso não tem direito.`, fund:`Art. 77, caput, I a III e § 1º, do CP.`},
+{tipo:'ce', tema:'concurso', enun:`A pena de multa segue um sistema bifásico: primeiro se define o número de dias-multa (10 a 360) e depois o valor de cada dia-multa (1/30 a 5 vezes o salário mínimo), podendo a multa ser aumentada até o triplo se for ineficaz diante da situação econômica do réu.`,
+ resp:true, exp:`Certo. O número de dias-multa acompanha a gravidade do crime; o valor do dia-multa acompanha a situação econômica do réu.`, fund:`Arts. 49 e 60, § 1º, do CP.`},
+{tipo:'me', tema:'concurso', enun:`O agente pratica quatro furtos em continuidade delitiva. Segundo a Súmula 659 do STJ, a fração de aumento deve ser de:`,
+ alts:[`1/6.`,`1/5.`,`1/4.`,`1/3.`,`2/3.`],
+ resp:2, exp:`Pela tabela da Súmula 659: 2 crimes = 1/6, 3 = 1/5, 4 = 1/4, 5 = 1/3, 6 = 1/2, 7 ou mais = 2/3. Bizu: crimes + denominador = 8.`, fund:`Súmula 659 do STJ; art. 71 do CP.`},
+{tipo:'me', tema:'concurso', enun:`Com uma só ação culposa, um motorista causa lesões em três vítimas (concurso formal próprio). Pelo critério jurisprudencial do número de infrações, o aumento será de:`,
+ alts:[`1/6.`,`1/5.`,`1/4.`,`1/3.`,`1/2.`],
+ resp:1, exp:`No concurso formal próprio: 2 crimes = 1/6, 3 = 1/5, 4 = 1/4, 5 = 1/3, 6 ou mais = 1/2 (o teto do art. 70).`, fund:`Art. 70 do CP; jurisprudência do STJ.`},
+{tipo:'ce', tema:'concurso', enun:`No concurso formal impróprio, quando a ação dolosa resulta de desígnios autônomos, as penas são aplicadas cumulativamente.`,
+ resp:true, exp:`Certo. Com desígnios autônomos, aplica-se a regra do concurso material (soma).`, fund:`Art. 70, caput, parte final, do CP.`},
+{tipo:'me', tema:'drogas', enun:`No tráfico de drogas, quanto à natureza e à quantidade da droga, o STF (Tema 712) entende que:`,
+ alts:[`devem ser consideradas na primeira e na terceira fases, por expressa previsão do art. 42.`,`só podem ser consideradas na segunda fase.`,`devem ser consideradas em apenas uma das fases do cálculo da pena.`,`não podem ser consideradas, por serem elementares do tipo.`,`impedem, por si sós, o tráfico privilegiado.`],
+ resp:2, exp:`Usar a natureza e a quantidade da droga na 1ª fase e de novo na modulação do § 4º seria bis in idem. Elas entram em uma única fase.`, fund:`STF, Tema 712 (ARE 666.334); art. 42 da Lei 11.343/06.`},
+{tipo:'ce', tema:'drogas', enun:`Segundo o STJ, ações penais em curso podem ser usadas para afastar o tráfico privilegiado, por evidenciarem dedicação a atividades criminosas.`,
+ resp:false, exp:`Errado. Inquéritos e ações penais em curso não podem impedir a aplicação do § 4º do art. 33.`, fund:`STJ, Tema 1.139.`},
+{tipo:'me', tema:'fase1', enun:`Homicídio com duas qualificadoras: motivo torpe e recurso que dificultou a defesa da vítima. Segundo a jurisprudência do STJ:`,
+ alts:[`as duas qualificadoras devem ser somadas para elevar a pena mínima.`,`uma qualifica o crime e a outra pode ser usada como agravante (se prevista no art. 61) ou, residualmente, como circunstância judicial.`,`a segunda deve ser desprezada, sob pena de bis in idem.`,`ambas devem ser consideradas na terceira fase.`,`a segunda se converte em causa de aumento de 1/3.`],
+ resp:1, exp:`Uma qualificadora define os novos limites; a sobressalente é usada como agravante, quando houver correspondente no art. 61, ou como circunstância judicial.`, fund:`Jurisprudência consolidada do STJ; arts. 59 e 61 do CP.`},
+{tipo:'ce', tema:'fase2', enun:`Quem pratica um crime depois de ter sido definitivamente condenado por contravenção penal é considerado reincidente.`,
+ resp:false, exp:`Errado. O art. 63 do CP exige crime anterior, e o art. 7º da LCP só trata de contravenção posterior. Contravenção seguida de crime não gera reincidência, mas pode configurar maus antecedentes.`, fund:`Art. 63 do CP; art. 7º da LCP.`},
+{tipo:'ce', tema:'fase2', enun:`A condenação anterior cuja pena foi extinta pela prescrição da pretensão executória é apta a gerar reincidência.`,
+ resp:true, exp:`Certo. A prescrição da pretensão executória só impede a execução; a condenação e seus efeitos secundários, como a reincidência, permanecem. Já a prescrição da pretensão punitiva apaga a condenação.`, fund:`Arts. 63 e 110 do CP.`},
+{tipo:'ce', tema:'fase2', enun:`A sentença que concede o perdão judicial não é considerada para efeitos de reincidência.`,
+ resp:true, exp:`Certo, por expressa previsão legal.`, fund:`Art. 120 do CP.`},
+{tipo:'me', tema:'fase2', enun:`Sobre as agravantes genéricas, assinale a alternativa correta.`,
+ alts:[`O rol do art. 61 é exemplificativo.`,`A agravante pode elevar a pena acima do máximo cominado.`,`Em regra, as agravantes do art. 61, II, não se aplicam aos crimes culposos, ao contrário da reincidência.`,`A agravante incide mesmo quando a circunstância qualifica o crime.`,`A lei fixa em 1/6 a fração de cada agravante.`],
+ resp:2, exp:`As agravantes do inciso II pressupõem dolo; a reincidência vale para qualquer crime. A) o rol é taxativo; B) a 2ª fase não rompe o máximo; D) o caput do art. 61 afasta essa hipótese; E) 1/6 é construção jurisprudencial, não legal.`, fund:`Art. 61 do CP; doutrina e jurisprudência majoritárias.`},
+{tipo:'ce', tema:'fase1', enun:`A culpabilidade do art. 59 do CP, como circunstância judicial, corresponde ao elemento do conceito analítico de crime e é aferida pela imputabilidade e pela potencial consciência da ilicitude.`,
+ resp:false, exp:`Errado. Na dosimetria, culpabilidade é o grau de reprovabilidade da conduta concreta, não o elemento do crime.`, fund:`Art. 59 do CP; doutrina e jurisprudência.`},
+{tipo:'me', tema:'fase1', enun:`Na dosimetria de um furto, o juiz elevou a pena-base afirmando que o réu agiu movido pela cobiça e pelo desejo de lucro fácil. A fundamentação é:`,
+ alts:[`idônea, pois o motivo é circunstância judicial.`,`inidônea, pois o desejo de lucro é inerente aos crimes patrimoniais (bis in idem).`,`idônea apenas se o réu for reincidente.`,`idônea, por se tratar de circunstância preponderante.`,`inidônea, porque os motivos só podem ser valorados na segunda fase.`],
+ resp:1, exp:`O lucro fácil é ínsito aos crimes contra o patrimônio. Valorá-lo de novo na pena-base é bis in idem.`, fund:`Art. 59 do CP; jurisprudência do STJ.`},
+{tipo:'ce', tema:'fase3', enun:`Havendo concurso entre a tentativa e a participação de menor importância, ambas causas de diminuição da Parte Geral, o juiz pode aplicar apenas a que mais diminua, nos termos do art. 68, parágrafo único, do CP.`,
+ resp:false, exp:`Errado. O parágrafo único do art. 68 só se aplica às causas da Parte Especial. As causas da Parte Geral incidem todas.`, fund:`Art. 68, parágrafo único, do CP.`},
+{tipo:'ce', tema:'fase1', enun:`Segundo o STJ, em tese repetitiva firmada em 2026, é válida a exasperação da pena-base, pelas consequências do crime, quando a vítima de homicídio deixa filho menor de idade.`,
+ resp:true, exp:`Certo. A morte é inerente ao tipo, mas a orfandade de filhos menores vai além do resultado típico. A valoração exige fundamentação no caso concreto.`, fund:`STJ, Tema 1.394 (2026).`},
+{tipo:'ce', tema:'concurso', enun:`Para o STJ, quando concorrem concurso formal e crime continuado no mesmo contexto, devem incidir cumulativamente os dois aumentos.`,
+ resp:false, exp:`Errado. Aplica-se apenas o aumento da continuidade delitiva, para evitar bis in idem.`, fund:`Jurisprudência do STJ; arts. 70 e 71 do CP.`},
+{tipo:'ce', tema:'fase2', enun:`Segundo o STJ (Tema 1.194), a confissão espontânea só atenua a pena quando efetivamente utilizada pelo juiz para formar seu convencimento.`,
+ resp:false, exp:`Errado. Esse era o sentido da redação antiga da Súmula 545. Desde 2025, a confissão atenua independentemente de ter sido usada na sentença e mesmo havendo outras provas, desde que não retratada (salvo se a confissão retratada serviu à apuração dos fatos).`, fund:`STJ, Tema 1.194 (REsp 2.001.973/RS); Súmula 545 do STJ (revisada).`},
+{tipo:'me', tema:'fase1', enun:`Sobre a fração de aumento da pena-base por circunstância judicial desfavorável, é correto afirmar que:`,
+ alts:[`a lei fixa 1/6 para cada circunstância.`,`a lei fixa 1/8 do intervalo para cada circunstância.`,`não há fração legal; a jurisprudência admite 1/6 da pena mínima ou 1/8 do intervalo, e outra fração exige fundamentação concreta.`,`a pena-base pode chegar ao dobro do máximo.`,`cada circunstância desfavorável eleva a pena-base em 1/3.`],
+ resp:2, exp:`O CP não fixa fração para a 1ª fase. A jurisprudência do STJ aceita os dois critérios como parâmetro, e fração diferente pede motivação concreta.`, fund:`Art. 59 do CP; jurisprudência do STJ.`},
+{tipo:'ce', tema:'regime', enun:`A pena de detenção pode ser cumprida inicialmente em regime fechado se o condenado for reincidente.`,
+ resp:false, exp:`Errado. A detenção começa no semiaberto ou no aberto; o regime fechado só é possível por regressão.`, fund:`Art. 33, caput, do CP.`}
+];
+
+/* ===================== BIZUS ===================== */
+const BIZUS = [
+{t:'Art. 59: as 8 circunstâncias judiciais', mn:'5 C + APM', html:`<p><b>5 C</b>: <b>C</b>ulpabilidade, <b>C</b>onduta social, <b>C</b>ircunstâncias, <b>C</b>onsequências e <b>C</b>omportamento da vítima.</p><p><b>APM</b> (como a associação de pais e mestres): <b>A</b>ntecedentes, <b>P</b>ersonalidade e <b>M</b>otivos.</p><p class="muted small">Na ordem da lei: CU · AN · CO · PE · MO · CI · CO · CO.</p>`},
+{t:'Ordem das fases (art. 68)', mn:'B · A · C', html:`<p><b>B</b>ase (art. 59) → <b>A</b>gravantes e atenuantes → <b>C</b>ausas de aumento e diminuição. É a ordem do alfabeto.</p><p class="muted small">Qualificadora vem antes de tudo, porque define o intervalo.</p>`},
+{t:'Quem pode romper os limites?', mn:'Gaiola × asas', html:`<p>As 1ª e 2ª fases ficam <b>presas na gaiola</b> do mínimo e do máximo: atenuante não fura o piso (Súm. 231) e agravante não fura o teto.</p><p>Só a 3ª fase <b>tem asas</b>: causas de aumento e diminuição saem dos limites.</p>`},
+{t:'Fração da 1ª fase', mn:'8 circunstâncias → 1/8', html:`<p>São 8 circunstâncias, então cada uma vale <b>1/8 do intervalo</b> (máx. − mín.). Se todas forem negativas, a pena-base chega exatamente ao máximo.</p><p>Critério alternativo: <b>1/6 da pena mínima</b> por circunstância.</p>`},
+{t:'Circunstâncias preponderantes (art. 67)', mn:'MPR', html:`<p><b>M</b>otivos determinantes · <b>P</b>ersonalidade · <b>R</b>eincidência.</p><p class="muted small">Pense em “Mais Peso na Reincidência”. A confissão entra na discussão pelo Tema 585 do STJ (compensa com a reincidência, salvo multirreincidência).</p>`},
+{t:'Atenuante etária', mn:'21 no fato · 70 na sentença', html:`<p>Jovem <b>quando age</b> (menor de 21 na data do fato) e idoso <b>quando é julgado</b> (maior de 70 na data da sentença).</p><p class="muted small">Não confunda com a agravante de crime contra <b>maior de 60</b> (art. 61, II, h).</p>`},
+{t:'Regra do 8: continuidade e concurso formal', mn:'crimes + denominador = 8', html:`<table class="tbl"><thead><tr><th>Crimes</th><th>Continuado (Súm. 659)</th><th>Formal próprio</th></tr></thead><tbody><tr><td>2</td><td>1/6</td><td>1/6</td></tr><tr><td>3</td><td>1/5</td><td>1/5</td></tr><tr><td>4</td><td>1/4</td><td>1/4</td></tr><tr><td>5</td><td>1/3</td><td>1/3</td></tr><tr><td>6</td><td>1/2</td><td>1/2 (teto)</td></tr><tr><td>7+</td><td>2/3 (teto)</td><td>1/2</td></tr></tbody></table><p class="muted small">2+6, 3+5, 4+4, 5+3, 6+2: sempre 8. Depois disso vale o teto de cada instituto.</p>`},
+{t:'Regime inicial (art. 33, § 2º)', mn:'8 deitado é algema', html:`<p>O <b>8</b> deitado (∞) parece uma <b>algema</b>: <b>mais de 8 anos = fechado</b>.</p><ul><li>Mais de 4 até 8: semiaberto (não reincidente)</li><li>Até 4: aberto (não reincidente)</li><li>Reincidente com até 4 e circunstâncias favoráveis: semiaberto (Súm. 269)</li><li>Detenção nunca começa no fechado</li></ul>`},
+{t:'Causas de diminuição da Parte Geral', mn:'TAS: 1/3 a 2/3 · EP: 1/6 a 1/3', html:`<p><b>TAS</b> diminui muito (1/3 a 2/3): <b>T</b>entativa, <b>A</b>rrependimento posterior, <b>S</b>emi-imputabilidade.</p><p><b>EP</b> diminui pouco (1/6 a 1/3): <b>E</b>rro de proibição evitável, <b>P</b>articipação de menor importância.</p><p class="muted small">Tráfico privilegiado é o mais largo: de 1/6 a 2/3.</p>`},
+{t:'Reincidência: período depurador', mn:'Reincidência caduca, antecedente fica', html:`<p>Depois de <b>5 anos</b> do cumprimento ou extinção da pena, a condenação não gera mais reincidência (art. 64, I).</p><p>Mas continua podendo ser <b>maus antecedentes</b>: o prazo não se aplica a eles (STF, Tema 150).</p>`},
+{t:'Contravenção e reincidência', mn:'Contravenção não sobe de nível', html:`<table class="tbl"><thead><tr><th>Antes</th><th>Depois</th><th>Reincidente?</th></tr></thead><tbody><tr><td>Crime</td><td>Crime</td><td class="yes">Sim</td></tr><tr><td>Crime</td><td>Contravenção</td><td class="yes">Sim</td></tr><tr><td>Contravenção</td><td>Contravenção</td><td class="yes">Sim</td></tr><tr><td>Contravenção</td><td>Crime</td><td class="no">Não</td></tr></tbody></table>`},
+{t:'Comportamento da vítima', mn:'A vítima nunca piora a vida do réu', html:`<p>Essa circunstância só pode ser <b>favorável</b> ao réu ou <b>neutra</b>. Se a vítima não contribuiu, não há aumento.</p>`},
+{t:'Confissão depois do Tema 1.194 (2025)', mn:'Confessou? Atenua.', html:`<ul><li>O juiz <b>usou ou não usou</b> a confissão: atenua igual.</li><li><b>Retratou?</b> Só atenua se a confissão ajudou a apurar os fatos.</li><li><b>Qualificou</b> (alegou excludente)? Atenua <b>menos</b> e não prepondera.</li><li><b>Tráfico</b>, admitindo só o uso próprio: atenua <b>menos</b> (Súm. 630 revisada).</li></ul>`},
+{t:'Pena de multa', mn:'10–360 · 1/30–5 · ×3', html:`<p><b>10 a 360</b> dias-multa (gravidade do crime) · <b>1/30 a 5</b> salários mínimos por dia (situação econômica) · pode ser aumentada até <b>o triplo</b> (art. 60, § 1º).</p>`},
+{t:'Sursis', mn:'2 · 2-4  |  4 · 4-6', html:`<p><b>Simples</b>: pena até <b>2</b> anos e período de prova de <b>2 a 4</b>.</p><p><b>Etário ou humanitário</b>: pena até <b>4</b> anos e período de prova de <b>4 a 6</b>.</p><p class="muted small">O sursis é subsidiário: só cabe se não couber a substituição do art. 44.</p>`},
+{t:'Substituição (art. 44)', mn:'4 sem violência · culposo sem teto', html:`<p>Doloso: pena até <b>4 anos</b>, sem violência ou grave ameaça. Culposo: <b>qualquer pena</b>.</p><p>Até 1 ano: <b>1</b> substitutiva (multa ou restritiva de direitos). Mais de 1 ano: <b>2</b> (restritiva + multa ou 2 restritivas).</p>`},
+{t:'Cascata na 3ª fase', mn:'A ordem dos fatores não altera', html:`<p>As frações incidem uma sobre o resultado da outra. Ex.: 6 anos + 1/3 = 8 anos; 8 anos − 1/2 = 4 anos. Invertendo: 6 − 1/2 = 3; 3 + 1/3 = 4 anos. O resultado é o mesmo.</p><p class="muted small">STJ, Tema 1.422 (pendente): vai definir a validade da cascata no concurso de majorantes.</p>`},
+{t:'Pegadinhas clássicas de prova', mn:'Leia de novo antes de marcar', html:`<ul><li>“Atenuante pode reduzir abaixo do mínimo” → <b>errado</b> (Súm. 231).</li><li>“Inquérito em curso = maus antecedentes” → <b>errado</b> (Súm. 444).</li><li>“Hediondo começa no fechado” → <b>errado</b> (STF).</li><li>“Art. 68, par. único, vale para a Parte Geral” → <b>errado</b>.</li><li>“Confissão só atenua se usada na sentença” → <b>desatualizado</b> (Tema 1.194).</li><li>“Detração só na execução” → <b>errado</b> para o regime (art. 387, § 2º, CPP).</li></ul>`}
+];
+
+/* ===================== ARTIGOS ===================== */
+const ARTIGOS = [
+{g:'Constituição Federal', a:[
+ {t:'Art. 5º, XLVI', x:`<p>A lei regulará a individualização da pena e adotará, entre outras, as seguintes:</p><p class="inc">a) privação ou restrição da liberdade; b) perda de bens; c) multa; d) prestação social alternativa; e) suspensão ou interdição de direitos.</p>`},
+ {t:'Art. 93, IX', x:`<p>Todos os julgamentos dos órgãos do Poder Judiciário serão públicos, e fundamentadas todas as decisões, sob pena de nulidade (...).</p>`}
+]},
+{g:'Código Penal · Aplicação da pena', a:[
+ {t:'Art. 59 · Fixação da pena', x:`<p>O juiz, atendendo à culpabilidade, aos antecedentes, à conduta social, à personalidade do agente, aos motivos, às circunstâncias e consequências do crime, bem como ao comportamento da vítima, estabelecerá, conforme seja necessário e suficiente para reprovação e prevenção do crime:</p><p class="inc">I - as penas aplicáveis dentre as cominadas;<br>II - a quantidade de pena aplicável, dentro dos limites previstos;<br>III - o regime inicial de cumprimento da pena privativa de liberdade;<br>IV - a substituição da pena privativa da liberdade aplicada, por outra espécie de pena, se cabível.</p>`},
+ {t:'Art. 60 · Critérios especiais da pena de multa', x:`<p>Na fixação da pena de multa o juiz deve atender, principalmente, à situação econômica do réu.</p><p>§ 1º A multa pode ser aumentada até o triplo, se o juiz considerar que, em virtude da situação econômica do réu, é ineficaz, embora aplicada no máximo.</p>`},
+ {t:'Art. 61 · Circunstâncias agravantes', x:`<p>São circunstâncias que sempre agravam a pena, quando não constituem ou qualificam o crime:</p><p class="inc">I - a reincidência;<br>II - ter o agente cometido o crime:<br>a) por motivo fútil ou torpe;<br>b) para facilitar ou assegurar a execução, a ocultação, a impunidade ou vantagem de outro crime;<br>c) à traição, de emboscada, ou mediante dissimulação, ou outro recurso que dificultou ou tornou impossível a defesa do ofendido;<br>d) com emprego de veneno, fogo, explosivo, tortura ou outro meio insidioso ou cruel, ou de que podia resultar perigo comum;<br>e) contra ascendente, descendente, irmão ou cônjuge;<br>f) com abuso de autoridade ou prevalecendo-se de relações domésticas, de coabitação ou de hospitalidade, ou com violência contra a mulher na forma da lei específica;<br>g) com abuso de poder ou violação de dever inerente a cargo, ofício, ministério ou profissão;<br>h) contra criança, maior de 60 (sessenta) anos, enfermo ou mulher grávida;<br>i) quando o ofendido estava sob a imediata proteção da autoridade;<br>j) em ocasião de incêndio, naufrágio, inundação ou qualquer calamidade pública, ou de desgraça particular do ofendido;<br>l) em estado de embriaguez preordenada.</p>`},
+ {t:'Art. 62 · Agravantes no concurso de pessoas', x:`<p>A pena será ainda agravada em relação ao agente que:</p><p class="inc">I - promove, ou organiza a cooperação no crime ou dirige a atividade dos demais agentes;<br>II - coage ou induz outrem à execução material do crime;<br>III - instiga ou determina a cometer o crime alguém sujeito à sua autoridade ou não-punível em virtude de condição ou qualidade pessoal;<br>IV - executa o crime, ou nele participa, mediante paga ou promessa de recompensa.</p>`},
+ {t:'Art. 63 · Reincidência', x:`<p>Verifica-se a reincidência quando o agente comete novo crime, depois de transitar em julgado a sentença que, no País ou no estrangeiro, o tenha condenado por crime anterior.</p>`},
+ {t:'Art. 64 · Efeitos da reincidência', x:`<p>Para efeito de reincidência:</p><p class="inc">I - não prevalece a condenação anterior, se entre a data do cumprimento ou extinção da pena e a infração posterior tiver decorrido período de tempo superior a 5 (cinco) anos, computado o período de prova da suspensão ou do livramento condicional, se não ocorrer revogação;<br>II - não se consideram os crimes militares próprios e políticos.</p>`},
+ {t:'Art. 65 · Circunstâncias atenuantes', x:`<p>São circunstâncias que sempre atenuam a pena:</p><p class="inc">I - ser o agente menor de 21 (vinte e um), na data do fato, ou maior de 70 (setenta) anos, na data da sentença;<br>II - o desconhecimento da lei;<br>III - ter o agente:<br>a) cometido o crime por motivo de relevante valor social ou moral;<br>b) procurado, por sua espontânea vontade e com eficiência, logo após o crime, evitar-lhe ou minorar-lhe as consequências, ou ter, antes do julgamento, reparado o dano;<br>c) cometido o crime sob coação a que podia resistir, ou em cumprimento de ordem de autoridade superior, ou sob a influência de violenta emoção, provocada por ato injusto da vítima;<br>d) confessado espontaneamente, perante a autoridade, a autoria do crime;<br>e) cometido o crime sob a influência de multidão em tumulto, se não o provocou.</p>`},
+ {t:'Art. 66 · Atenuante inominada', x:`<p>A pena poderá ser ainda atenuada em razão de circunstância relevante, anterior ou posterior ao crime, embora não prevista expressamente em lei.</p>`},
+ {t:'Art. 67 · Concurso de circunstâncias agravantes e atenuantes', x:`<p>No concurso de agravantes e atenuantes, a pena deve aproximar-se do limite indicado pelas circunstâncias preponderantes, entendendo-se como tais as que resultam dos motivos determinantes do crime, da personalidade do agente e da reincidência.</p>`},
+ {t:'Art. 68 · Cálculo da pena', x:`<p>A pena-base será fixada atendendo-se ao critério do art. 59 deste Código; em seguida serão consideradas as circunstâncias atenuantes e agravantes; por último, as causas de diminuição e de aumento.</p><p>Parágrafo único. No concurso de causas de aumento ou de diminuição previstas na parte especial, pode o juiz limitar-se a um só aumento ou a uma só diminuição, prevalecendo, todavia, a causa que mais aumente ou diminua.</p>`},
+ {t:'Art. 11 · Frações não computáveis da pena', x:`<p>Desprezam-se, nas penas privativas de liberdade e nas restritivas de direitos, as frações de dia, e, na pena de multa, as frações de cruzeiro.</p>`},
+ {t:'Art. 120 · Perdão judicial', x:`<p>A sentença que conceder perdão judicial não será considerada para efeitos de reincidência.</p>`}
+]},
+{g:'Código Penal · Causas gerais de diminuição e aumento', a:[
+ {t:'Art. 14, parágrafo único · Tentativa', x:`<p>Salvo disposição em contrário, pune-se a tentativa com a pena correspondente ao crime consumado, diminuída de um a dois terços.</p>`},
+ {t:'Art. 16 · Arrependimento posterior', x:`<p>Nos crimes cometidos sem violência ou grave ameaça à pessoa, reparado o dano ou restituída a coisa, até o recebimento da denúncia ou da queixa, por ato voluntário do agente, a pena será reduzida de um a dois terços.</p>`},
+ {t:'Art. 21 · Erro sobre a ilicitude do fato', x:`<p>O desconhecimento da lei é inescusável. O erro sobre a ilicitude do fato, se inevitável, isenta de pena; se evitável, poderá diminuí-la de um sexto a um terço.</p>`},
+ {t:'Art. 26, parágrafo único · Semi-imputabilidade', x:`<p>A pena pode ser reduzida de um a dois terços, se o agente, em virtude de perturbação de saúde mental ou por desenvolvimento mental incompleto ou retardado não era inteiramente capaz de entender o caráter ilícito do fato ou de determinar-se de acordo com esse entendimento.</p>`},
+ {t:'Art. 29, §§ 1º e 2º · Concurso de pessoas', x:`<p>§ 1º Se a participação for de menor importância, a pena pode ser diminuída de um sexto a um terço.</p><p>§ 2º Se algum dos concorrentes quis participar de crime menos grave, ser-lhe-á aplicada a pena deste; essa pena será aumentada até metade, na hipótese de ter sido previsível o resultado mais grave.</p>`}
+]},
+{g:'Código Penal · Regime, substituição, multa e sursis', a:[
+ {t:'Art. 33 · Reclusão e detenção', x:`<p>A pena de reclusão deve ser cumprida em regime fechado, semi-aberto ou aberto. A de detenção, em regime semi-aberto, ou aberto, salvo necessidade de transferência a regime fechado.</p><p>§ 2º (...) a) o condenado a pena superior a 8 (oito) anos deverá começar a cumpri-la em regime fechado;<br>b) o condenado não reincidente, cuja pena seja superior a 4 (quatro) anos e não exceda a 8 (oito), poderá, desde o princípio, cumpri-la em regime semi-aberto;<br>c) o condenado não reincidente, cuja pena seja igual ou inferior a 4 (quatro) anos, poderá, desde o início, cumpri-la em regime aberto.</p><p>§ 3º A determinação do regime inicial de cumprimento da pena far-se-á com observância dos critérios previstos no art. 59 deste Código.</p>`},
+ {t:'Art. 44 · Penas restritivas de direitos', x:`<p>As penas restritivas de direitos são autônomas e substituem as privativas de liberdade, quando:</p><p class="inc">I - aplicada pena privativa de liberdade não superior a quatro anos e o crime não for cometido com violência ou grave ameaça à pessoa ou, qualquer que seja a pena aplicada, se o crime for culposo;<br>II - o réu não for reincidente em crime doloso;<br>III - a culpabilidade, os antecedentes, a conduta social e a personalidade do condenado, bem como os motivos e as circunstâncias indicarem que essa substituição seja suficiente.</p><p>§ 2º Na condenação igual ou inferior a um ano, a substituição pode ser feita por multa ou por uma pena restritiva de direitos; se superior a um ano, a pena privativa de liberdade pode ser substituída por uma pena restritiva de direitos e multa ou por duas restritivas de direitos.</p><p>§ 3º Se o condenado for reincidente, o juiz poderá aplicar a substituição, desde que, em face de condenação anterior, a medida seja socialmente recomendável e a reincidência não se tenha operado em virtude da prática do mesmo crime.</p>`},
+ {t:'Art. 49 · Pena de multa', x:`<p>A pena de multa consiste no pagamento ao fundo penitenciário da quantia fixada na sentença e calculada em dias-multa. Será, no mínimo, de 10 (dez) e, no máximo, de 360 (trezentos e sessenta) dias-multa.</p><p>§ 1º O valor do dia-multa será fixado pelo juiz não podendo ser inferior a um trigésimo do maior salário mínimo mensal vigente ao tempo do fato, nem superior a 5 (cinco) vezes esse salário.</p>`},
+ {t:'Art. 77 · Suspensão condicional da pena', x:`<p>A execução da pena privativa de liberdade, não superior a 2 (dois) anos, poderá ser suspensa, por 2 (dois) a 4 (quatro) anos, desde que:</p><p class="inc">I - o condenado não seja reincidente em crime doloso;<br>II - a culpabilidade, os antecedentes, a conduta social e personalidade do agente, bem como os motivos e as circunstâncias autorizem a concessão do benefício;<br>III - não seja indicada ou cabível a substituição prevista no art. 44 deste Código.</p><p>§ 1º A condenação anterior a pena de multa não impede a concessão do benefício.</p><p>§ 2º A execução da pena privativa de liberdade, não superior a quatro anos, poderá ser suspensa, por quatro a seis anos, desde que o condenado seja maior de setenta anos de idade, ou razões de saúde justifiquem a suspensão.</p>`}
+]},
+{g:'Código Penal · Concurso de crimes', a:[
+ {t:'Art. 69 · Concurso material', x:`<p>Quando o agente, mediante mais de uma ação ou omissão, pratica dois ou mais crimes, idênticos ou não, aplicam-se cumulativamente as penas privativas de liberdade em que haja incorrido. No caso de aplicação cumulativa de penas de reclusão e de detenção, executa-se primeiro aquela.</p>`},
+ {t:'Art. 70 · Concurso formal', x:`<p>Quando o agente, mediante uma só ação ou omissão, pratica dois ou mais crimes, idênticos ou não, aplica-se-lhe a mais grave das penas cabíveis ou, se iguais, somente uma delas, mas aumentada, em qualquer caso, de um sexto até metade. As penas aplicam-se, entretanto, cumulativamente, se a ação ou omissão é dolosa e os crimes concorrentes resultam de desígnios autônomos, consoante o disposto no artigo anterior.</p><p>Parágrafo único. Não poderá a pena exceder a que seria cabível pela regra do art. 69 deste Código.</p>`},
+ {t:'Art. 71 · Crime continuado', x:`<p>Quando o agente, mediante mais de uma ação ou omissão, pratica dois ou mais crimes da mesma espécie e, pelas condições de tempo, lugar, maneira de execução e outras semelhantes, devem os subsequentes ser havidos como continuação do primeiro, aplica-se-lhe a pena de um só dos crimes, se idênticas, ou a mais grave, se diversas, aumentada, em qualquer caso, de um sexto a dois terços.</p><p>Parágrafo único. Nos crimes dolosos, contra vítimas diferentes, cometidos com violência ou grave ameaça à pessoa, poderá o juiz, considerando a culpabilidade, os antecedentes, a conduta social e a personalidade do agente, bem como os motivos e as circunstâncias, aumentar a pena de um só dos crimes, se idênticas, ou a mais grave, se diversas, até o triplo, observadas as regras do parágrafo único do art. 70 e do art. 75 deste Código.</p>`},
+ {t:'Art. 72 · Multas no concurso de crimes', x:`<p>No concurso de crimes, as penas de multa são aplicadas distinta e integralmente.</p>`},
+ {t:'Art. 75 · Limite das penas', x:`<p>O tempo de cumprimento das penas privativas de liberdade não pode ser superior a 40 (quarenta) anos.</p>`, o:`Redação dada pela Lei 13.964/2019 (antes, 30 anos).`},
+ {t:'Art. 119 · Prescrição no concurso de crimes', x:`<p>No caso de concurso de crimes, a extinção da punibilidade incidirá sobre a pena de cada um, isoladamente.</p>`}
+]},
+{g:'Código de Processo Penal', a:[
+ {t:'Art. 385', x:`<p>Nos crimes de ação pública, o juiz poderá proferir sentença condenatória, ainda que o Ministério Público tenha opinado pela absolvição, bem como reconhecer agravantes, embora nenhuma tenha sido alegada.</p>`},
+ {t:'Art. 387 · Sentença condenatória', x:`<p>O juiz, ao proferir sentença condenatória:</p><p class="inc">I - mencionará as circunstâncias agravantes ou atenuantes definidas no Código Penal, e cuja existência reconhecer;<br>II - mencionará as outras circunstâncias apuradas e tudo o mais que deva ser levado em conta na aplicação da pena, de acordo com o disposto nos arts. 59 e 60 do Código Penal;<br>III - aplicará as penas de acordo com essas conclusões;<br>IV - fixará valor mínimo para reparação dos danos causados pela infração, considerando os prejuízos sofridos pelo ofendido; (...)</p><p>§ 2º O tempo de prisão provisória, de prisão administrativa ou de internação, no Brasil ou no estrangeiro, será computado para fins de determinação do regime inicial de pena privativa de liberdade.</p>`},
+ {t:'Art. 492, I · Sentença no Júri', x:`<p>Em seguida, o presidente proferirá sentença que: I - no caso de condenação:</p><p class="inc">a) fixará a pena-base;<br>b) considerará as circunstâncias agravantes ou atenuantes alegadas nos debates;<br>c) imporá os aumentos ou diminuições da pena, em atenção às causas admitidas pelo júri; (...)</p>`}
+]},
+{g:'Leis especiais', a:[
+ {t:'Lei 11.343/06 · Art. 33, § 4º (tráfico privilegiado)', x:`<p>Nos delitos definidos no caput e no § 1º deste artigo, as penas poderão ser reduzidas de um sexto a dois terços, vedada a conversão em penas restritivas de direitos, desde que o agente seja primário, de bons antecedentes, não se dedique às atividades criminosas nem integre organização criminosa.</p>`, o:`A expressão “vedada a conversão em penas restritivas de direitos” foi declarada inconstitucional pelo STF (HC 97.256) e teve a execução suspensa pela Resolução 5/2012 do Senado.`},
+ {t:'Lei 11.343/06 · Art. 42', x:`<p>O juiz, na fixação das penas, considerará, com preponderância sobre o previsto no art. 59 do Código Penal, a natureza e a quantidade da substância ou do produto, a personalidade e a conduta social do agente.</p>`},
+ {t:'Decreto-Lei 3.688/41 (LCP) · Art. 7º', x:`<p>Verifica-se a reincidência quando o agente pratica uma contravenção depois de passar em julgado a sentença que o tenha condenado, no Brasil ou no estrangeiro, por qualquer crime, ou, no Brasil, por motivo de contravenção.</p>`},
+ {t:'Lei 8.072/90 · Art. 2º, § 1º', x:`<p>A pena por crime previsto neste artigo será cumprida inicialmente em regime fechado.</p>`, o:`Declarado inconstitucional pelo STF (HC 111.840 e Tema 972 RG). O regime inicial segue o art. 33 do CP.`},
+ {t:'Lei 7.210/84 (LEP) · Art. 112, § 5º', x:`<p>Não se considera hediondo ou equiparado, para os fins deste artigo, o crime de tráfico de drogas previsto no § 4º do art. 33 da Lei nº 11.343, de 23 de agosto de 2006.</p>`}
+]}
+];
+
+/* ===================== JURISPRUDÊNCIA ===================== */
+const JURIS = [
+{tr:'STJ', tp:'Súmula', n:'231', fase:'fase2', novo:true, st:'Mantida em 2024', x:`A incidência da circunstância atenuante não pode conduzir à redução da pena abaixo do mínimo legal.`, c:`<b>Como cai:</b> “atenuante pode levar abaixo do mínimo se fundamentada” → errado. A 3ª Seção rejeitou a revisão em 14/08/2024 (REsp 2.057.181/SE e outros). Causa de diminuição, sim, leva abaixo do mínimo.`},
+{tr:'STF', tp:'Tese', n:'Tema 158 RG', fase:'fase2', x:`Circunstância atenuante genérica não pode conduzir à redução da pena abaixo do mínimo legal (RE 597.270).`, c:`<b>Como cai:</b> junto com a Súmula 231, para mostrar que STF e STJ convergem.`},
+{tr:'STJ', tp:'Súmula', n:'241', fase:'fase2', x:`A reincidência penal não pode ser considerada como circunstância agravante e, simultaneamente, como circunstância judicial.`, c:`<b>Como cai:</b> réu com uma só condenação anterior → só reincidência. Com duas condenações, uma pode ir para os antecedentes e a outra para a reincidência.`},
+{tr:'STJ', tp:'Súmula', n:'444', fase:'fase1', x:`É vedada a utilização de inquéritos policiais e ações penais em curso para agravar a pena-base.`, c:`<b>Como cai:</b> enunciado dizendo que inquéritos configuram maus antecedentes ou personalidade voltada ao crime → errado.`},
+{tr:'STJ', tp:'Súmula', n:'636', fase:'fase1', x:`A folha de antecedentes criminais é documento suficiente a comprovar os maus antecedentes e a reincidência.`, c:`<b>Como cai:</b> “exige certidão cartorária” → errado.`},
+{tr:'STF', tp:'Tese', n:'Tema 150 RG', fase:'fase1', x:`Não se aplica para o reconhecimento dos maus antecedentes o prazo quinquenal de prescrição da reincidência, previsto no art. 64, I, do Código Penal (RE 593.818).`, c:`<b>Como cai:</b> condenação extinta há mais de 5 anos → não reincide, mas pode ser mau antecedente.`},
+{tr:'STJ', tp:'Tese', n:'Tema 1.077', fase:'fase1', x:`Condenações criminais transitadas em julgado, não consideradas para caracterizar a reincidência, somente podem ser valoradas, na primeira fase da dosimetria, a título de antecedentes criminais, não se admitindo sua utilização para desabonar a personalidade ou a conduta social do agente.`, c:`<b>Como cai:</b> juiz usa condenações anteriores para dizer que a personalidade é “voltada ao crime” → inidôneo.`},
+{tr:'STJ', tp:'Tese', n:'Tema 1.394', fase:'fase1', novo:true, st:'2026', x:`É válida a exasperação da pena-base, em razão das consequências do delito, na hipótese de a vítima de homicídio haver deixado filho(s) menor(es) de idade.`, c:`<b>Como cai:</b> a morte é inerente ao homicídio, mas a orfandade de filhos menores extrapola o resultado típico. Exige fundamentação concreta (3ª Seção, maio de 2026).`},
+{tr:'STJ', tp:'Entendimento', n:'Fração da 1ª fase', fase:'fase1', x:`Não há fração legal para a pena-base. São aceitos como parâmetros 1/6 sobre a pena mínima ou 1/8 sobre o intervalo entre as penas mínima e máxima, por circunstância negativa; fração diversa exige fundamentação concreta.`, c:`<b>Como cai:</b> “a lei fixa 1/6 por circunstância” → errado.`},
+{tr:'STJ', tp:'Entendimento', n:'Comportamento da vítima', fase:'fase1', x:`O comportamento da vítima é circunstância neutra ou favorável ao réu; jamais pode ser utilizado para elevar a pena-base.`, c:`<b>Como cai:</b> “a vítima não contribuiu, logo a circunstância é negativa” → errado.`},
+{tr:'STJ', tp:'Entendimento', n:'Pluralidade de qualificadoras', fase:'fase1', x:`Havendo mais de uma qualificadora, uma qualifica o delito e as demais podem ser valoradas como agravantes, se previstas nos arts. 61 e 62, ou, residualmente, como circunstâncias judiciais.`, c:`<b>Como cai:</b> homicídio duplamente qualificado: a 2ª qualificadora não é descartada.`},
+{tr:'STJ', tp:'Súmula', n:'545 (revisada)', fase:'fase2', novo:true, st:'Revisada em 2025', x:`Em síntese, na redação revisada: a confissão do autor possibilita a atenuação da pena prevista no art. 65, III, d, do CP, independentemente de ser utilizada na formação do convencimento do julgador.`, c:`<b>Atenção:</b> a redação antiga exigia que a confissão fosse <b>utilizada</b> para formar o convencimento do julgador. Questões antigas trazem o texto anterior.`},
+{tr:'STJ', tp:'Tese', n:'Tema 1.194', fase:'fase2', novo:true, st:'2025', x:`Em síntese: (1) a confissão espontânea (art. 65, III, d) abranda a pena independentemente de ter sido utilizada na formação do convencimento do julgador e mesmo que existam outras provas suficientes, desde que não tenha havido retratação, salvo se a confissão retratada tiver servido à apuração dos fatos; (2) a confissão qualificada, ou aquela cujo fato confessado tem tipificação com pena menor, atenua em menor proporção e não pode ser considerada preponderante no concurso com agravantes.`, c:`<b>Dados:</b> REsp 2.001.973/RS, 3ª Seção, j. 10/09/2025. Os efeitos prejudiciais aos réus foram modulados: só alcançam fatos posteriores à publicação do acórdão. Confira o texto oficial no site do STJ.`},
+{tr:'STJ', tp:'Súmula', n:'630 (revisada)', fase:'drogas', novo:true, st:'Revisada em 2025', x:`Em síntese, na redação revisada: no tráfico, quando o acusado admite a posse ou propriedade da droga para uso próprio, negando a traficância, a atenuante da confissão incide em proporção inferior à que seria devida no caso de confissão plena.`, c:`<b>Atenção:</b> a redação antiga dizia que a atenuante exigia o reconhecimento da traficância, não bastando admitir a posse para uso próprio.`},
+{tr:'STJ', tp:'Tese', n:'Tema 585 (revisado)', fase:'fase2', x:`É possível, na segunda fase da dosimetria da pena, a compensação integral da atenuante da confissão espontânea com a agravante da reincidência, seja ela específica ou não. Todavia, nos casos de multirreincidência, deve ser reconhecida a preponderância da agravante prevista no art. 61, I, do CP, sendo admissível a sua compensação proporcional com a atenuante da confissão espontânea.`, c:`<b>Como cai:</b> divergência com o STF, que tem precedentes pela preponderância da reincidência. Veja qual tribunal o enunciado pede.`},
+{tr:'STJ', tp:'Súmula', n:'74', fase:'fase2', x:`Para efeitos penais, o reconhecimento da menoridade do réu requer prova por documento hábil.`, c:`<b>Como cai:</b> associada à atenuante do menor de 21 anos.`},
+{tr:'STJ', tp:'Súmula', n:'443', fase:'fase3', x:`O aumento na terceira fase de aplicação da pena no crime de roubo circunstanciado exige fundamentação concreta, não sendo suficiente para a sua exasperação a mera indicação do número de majorantes.`, c:`<b>Como cai:</b> “duas majorantes justificam, por si só, aumento acima de 1/3” → errado.`},
+{tr:'STJ', tp:'Súmula', n:'442', fase:'fase3', x:`É inadmissível aplicar, no furto qualificado, pelo concurso de agentes, a majorante do roubo.`, c:`<b>Como cai:</b> proibição de analogia in malam partem e de mistura de tipos.`},
+{tr:'STJ', tp:'Entendimento', n:'Majorantes sobressalentes', fase:'fase3', x:`Havendo pluralidade de causas de aumento, é possível aplicar uma na terceira fase e deslocar as remanescentes para a primeira fase, como circunstâncias judiciais, sem bis in idem.`, c:`<b>Como cai:</b> roubo com concurso de agentes e emprego de arma de fogo.`},
+{tr:'STJ', tp:'Tese', n:'Tema 1.422 (pendente)', fase:'fase3', novo:true, st:'Pendente', x:`Questão submetida: definir se, no concurso de majorantes (art. 68 do CP), é admissível a aplicação cumulativa, sucessiva (em cascata) das causas de aumento na terceira fase da dosimetria.`, c:`<b>Situação:</b> afetado em 06/04/2026 (rel. Min. Sebastião Reis Júnior), sem suspensão dos processos. As Turmas admitem a cascata com fundamentação. Acompanhe o julgamento.`},
+{tr:'STF', tp:'Tese', n:'Tema 712 RG', fase:'drogas', x:`As circunstâncias da natureza e da quantidade da droga apreendida devem ser levadas em consideração apenas em uma das fases do cálculo da pena (ARE 666.334).`, c:`<b>Como cai:</b> quantidade usada na pena-base e de novo para reduzir a fração do § 4º → bis in idem.`},
+{tr:'STJ', tp:'Tese', n:'Tema 1.139', fase:'drogas', x:`É vedada a utilização de inquéritos e/ou ações penais em curso para impedir a aplicação do art. 33, § 4º, da Lei n. 11.343/06.`, c:`<b>Como cai:</b> réu primário com processos em andamento continua tendo direito ao tráfico privilegiado.`},
+{tr:'STJ', tp:'Entendimento', n:'Quantidade de droga e privilégio', fase:'drogas', x:`A quantidade e a natureza da droga, por si sós, não bastam para afastar o tráfico privilegiado; podem servir para modular a fração de redução se não tiverem sido usadas na primeira fase (3ª Seção, HC 725.534/SP, 2022).`, c:`<b>Como cai:</b> “grande quantidade de droga, sozinha, prova dedicação ao crime” → errado.`},
+{tr:'STF', tp:'Precedente', n:'HC 118.533', fase:'drogas', x:`O tráfico privilegiado (art. 33, § 4º, da Lei 11.343/06) não é crime equiparado a hediondo.`, c:`<b>Como cai:</b> a Súmula 512 do STJ (em sentido contrário) foi cancelada, e o art. 112, § 5º, da LEP positivou o entendimento.`},
+{tr:'STF', tp:'Precedente', n:'HC 97.256', fase:'drogas', x:`É inconstitucional a vedação abstrata à substituição da pena privativa de liberdade por restritivas de direitos no tráfico de drogas.`, c:`<b>Como cai:</b> o Senado suspendeu a expressão (Resolução 5/2012). Cabe substituição se preenchido o art. 44.`},
+{tr:'STJ', tp:'Súmula', n:'440', fase:'regime', x:`Fixada a pena-base no mínimo legal, é vedado o estabelecimento de regime prisional mais gravoso do que o cabível em razão da sanção imposta, com base apenas na gravidade abstrata do delito.`, c:`<b>Como cai:</b> roubo com pena de 5 anos e 4 meses, réu primário e pena-base no mínimo → fechado só com fundamentação concreta.`},
+{tr:'STF', tp:'Súmula', n:'718', fase:'regime', x:`A opinião do julgador sobre a gravidade em abstrato do crime não constitui motivação idônea para a imposição de regime mais severo do que o permitido segundo a pena aplicada.`, c:`<b>Como cai:</b> junto com a 719 e a 440 do STJ.`},
+{tr:'STF', tp:'Súmula', n:'719', fase:'regime', x:`A imposição do regime de cumprimento mais severo do que a pena aplicada permitir exige motivação idônea.`, c:`<b>Como cai:</b> regime mais gravoso é possível, desde que com motivação concreta.`},
+{tr:'STJ', tp:'Súmula', n:'269', fase:'regime', x:`É admissível a adoção do regime prisional semiaberto aos reincidentes condenados a pena igual ou inferior a quatro anos se favoráveis as circunstâncias judiciais.`, c:`<b>Como cai:</b> reincidente com pena de 3 anos e circunstâncias favoráveis → semiaberto, não fechado.`},
+{tr:'STF', tp:'Tese', n:'Tema 972 RG · HC 111.840', fase:'regime', x:`É inconstitucional a fixação ex lege, com base no art. 2º, § 1º, da Lei 8.072/90, do regime inicial fechado, devendo o julgador observar os parâmetros do art. 33 do CP (ARE 1.052.700).`, c:`<b>Como cai:</b> “hediondo inicia obrigatoriamente no fechado” → errado.`},
+{tr:'STJ', tp:'Súmula', n:'588', fase:'regime', x:`A prática de crime ou contravenção penal contra a mulher com violência ou grave ameaça no ambiente doméstico impossibilita a substituição da pena privativa de liberdade por restritiva de direitos.`, c:`<b>Como cai:</b> vale até para as contravenções (vias de fato).`},
+{tr:'STJ', tp:'Súmula', n:'493', fase:'regime', x:`É inadmissível a fixação de pena substitutiva (art. 44 do CP) como condição especial ao regime aberto.`, c:`<b>Como cai:</b> juiz fixa prestação de serviços como condição do aberto → inadmissível.`},
+{tr:'STJ', tp:'Súmula', n:'171', fase:'regime', x:`Cominadas cumulativamente, em lei especial, penas privativa de liberdade e pecuniária, é defeso a substituição da prisão por multa.`, c:`<b>Como cai:</b> crimes de lei especial com pena de prisão e multa.`},
+{tr:'STJ', tp:'Súmula', n:'659', fase:'concurso', x:`A fração de aumento em razão da prática de crime continuado deve ser fixada de acordo com o número de delitos cometidos, aplicando-se 1/6 pela prática de duas infrações, 1/5 para três, 1/4 para quatro, 1/3 para cinco, 1/2 para seis e 2/3 para sete ou mais infrações.`, c:`<b>Bizu:</b> crimes + denominador = 8 (de 2 a 6 crimes).`},
+{tr:'STJ', tp:'Entendimento', n:'Concurso formal + continuidade', fase:'concurso', x:`Quando concorrem concurso formal e crime continuado, aplica-se somente o aumento da continuidade delitiva, sob pena de bis in idem.`, c:`<b>Como cai:</b> roubos em sequência contra várias vítimas no mesmo ônibus.`},
+{tr:'STJ', tp:'Entendimento', n:'Multa no crime continuado', fase:'concurso', x:`A regra do art. 72 do CP (multas aplicadas distinta e integralmente) não se aplica ao crime continuado, em que a multa segue o aumento da continuidade.`, c:`<b>Como cai:</b> pegadinha com a literalidade do art. 72.`},
+{tr:'STF', tp:'Súmula', n:'715', fase:'concurso', x:`A pena unificada para atender ao limite de trinta anos de cumprimento, determinado pelo art. 75 do Código Penal, não é considerada para a concessão de outros benefícios, como o livramento condicional ou regime mais favorável de execução.`, c:`<b>Atenção:</b> hoje o limite é de 40 anos (Lei 13.964/19), mas a lógica da súmula continua.`},
+{tr:'STF', tp:'Súmula', n:'497', fase:'concurso', x:`Quando se tratar de crime continuado, a prescrição regula-se pela pena imposta na sentença, não se computando o acréscimo decorrente da continuação.`, c:`<b>Como cai:</b> junto com o art. 119 do CP (prescrição de cada crime isoladamente).`}
+];
+
+/* ===================== APP ===================== */
+(function(){
+'use strict';
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const store = {
+  get(k, d){ try { const v = localStorage.getItem('dosim:' + k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem('dosim:' + k, JSON.stringify(v)); } catch(e){} }
+};
+const TAGS = {
+  fundamentos:'Fundamentos', fase1:'1ª fase · Pena-base', fase2:'2ª fase · Agravantes e atenuantes',
+  fase3:'3ª fase · Causas de aumento e diminuição', drogas:'Lei de Drogas', regime:'Regime, substituição e sursis',
+  concurso:'Concurso de crimes e multa', calculo:'Cálculo da pena'
+};
+const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const strip = h => String(h).replace(/<[^>]+>/g, ' ');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+function tagChip(t){ return `<span class="chip t-${t}">${esc(TAGS[t] || t)}</span>`; }
+
+CARDS.forEach((c, i) => c.id = i);
+QUESTOES.forEach((q, i) => q.id = i);
+
+/* ---------- tema ---------- */
+const root = document.documentElement;
+function applyTheme(t){ if(t) root.setAttribute('data-theme', t); else root.removeAttribute('data-theme'); }
+applyTheme(store.get('theme', null));
+$('#themeBtn').addEventListener('click', () => {
+  const cur = root.getAttribute('data-theme') || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const nx = cur === 'dark' ? 'light' : 'dark'; applyTheme(nx); store.set('theme', nx);
+});
+
+/* ---------- abas ---------- */
+let curTab = 'inicio';
+function showTab(id){
+  curTab = id;
+  $$('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === id)));
+  $$('.panel').forEach(p => p.hidden = p.id !== 'tab-' + id);
+  store.set('tab', id);
+  if(id === 'inicio') renderHome();
+  const btn = $(`.tab-btn[data-tab="${id}"]`); if(btn && btn.scrollIntoView) btn.scrollIntoView({block:'nearest', inline:'nearest'});
+  window.scrollTo(0, 0);
+}
+$$('.tab-btn').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+/* ---------- início ---------- */
+function renderHome(){
+  const now = Date.now();
+  const mastered = CARDS.filter(c => srs[c.id] && srs[c.id].box >= 4).length;
+  const due = CARDS.filter(c => !srs[c.id] || srs[c.id].due <= now).length;
+  const ans = Object.keys(qans).length;
+  const ok = Object.values(qans).filter(a => a.ok).length;
+  const pct = ans ? Math.round(ok / ans * 100) : 0;
+  const tiles = [
+    {n:`${mastered}<span class="muted" style="font-size:1rem">/${CARDS.length}</span>`, l:'cards dominados', p: mastered / CARDS.length, go:'cards'},
+    {n:due, l:'cards para revisar hoje', p: 1 - due / CARDS.length, go:'cards'},
+    {n:`${ans}<span class="muted" style="font-size:1rem">/${QUESTOES.length}</span>`, l:'questões respondidas', p: ans / QUESTOES.length, go:'questoes'},
+    {n: ans ? pct + '%' : '—', l:'de acertos nas questões', p: pct / 100, go:'questoes'}
+  ];
+  $('#homeStats').innerHTML = tiles.map(t => `<button type="button" class="card stat" data-go="${t.go}" style="text-align:left;cursor:pointer;font:inherit;color:inherit"><div class="n">${t.n}</div><div class="l">${t.l}</div><div class="bar"><i style="width:${Math.max(0, Math.min(100, t.p * 100))}%"></i></div></button>`).join('');
+  $$('#homeStats [data-go]').forEach(b => b.addEventListener('click', () => showTab(b.dataset.go)));
+}
+
+/* ---------- flashcards ---------- */
+const INTERVALS = [0, 1, 3, 7, 15, 30];
+let srs = store.get('srs', {});
+let fc = { tag: '', mode: 'srs', queue: [], order: [], pos: 0, revealed: false };
+const fcSel = $('#fcTag');
+fcSel.innerHTML = `<option value="">Todos os assuntos (${CARDS.length})</option>` + Object.keys(TAGS).filter(t => CARDS.some(c => c.t === t)).map(t => `<option value="${t}">${TAGS[t]} (${CARDS.filter(c => c.t === t).length})</option>`).join('');
+function fcList(){ return CARDS.filter(c => !fc.tag || c.t === fc.tag); }
+function buildQueue(){
+  const now = Date.now();
+  const list = fcList().filter(c => !srs[c.id] || srs[c.id].due <= now);
+  list.sort((a, b) => ((srs[a.id] ? 0 : 1) - (srs[b.id] ? 0 : 1)) || (((srs[a.id] || {}).due || 0) - ((srs[b.id] || {}).due || 0)) || (a.id - b.id));
+  fc.queue = list.map(c => c.id);
+}
+function buildOrder(sh){ fc.order = fcList().map(c => c.id); if(sh) shuffle(fc.order); fc.pos = 0; }
+function fcCounts(){
+  const list = fcList(), now = Date.now();
+  const novos = list.filter(c => !srs[c.id]).length;
+  const rev = list.filter(c => srs[c.id] && srs[c.id].due <= now).length;
+  const dom = list.filter(c => srs[c.id] && srs[c.id].box >= 4).length;
+  $('#fcCounts').innerHTML = `Novos: <b>${novos}</b> · Para revisar: <b>${rev}</b> · Dominados: <b>${dom}</b>`;
+}
+function curCardId(){ return fc.mode === 'srs' ? fc.queue[0] : fc.order[fc.pos]; }
+function renderCard(){
+  fcCounts();
+  const box = $('#fcBox');
+  const id = curCardId();
+  if(id === undefined){
+    box.innerHTML = `<div class="done"><div class="big">🎉</div><h3>Revisão do dia concluída</h3><p class="muted">Nenhum card pendente neste filtro. Volte amanhã, ou continue estudando livremente.</p><div class="fc-actions" style="justify-content:center"><button class="btn primary" type="button" id="goNav">Navegar todos os cards</button></div></div>`;
+    $('#goNav').addEventListener('click', () => setMode('nav'));
+    return;
+  }
+  const c = CARDS[id];
+  const total = fc.mode === 'srs' ? `${fc.queue.length} na fila` : `${fc.pos + 1} de ${fc.order.length}`;
+  const s = srs[id];
+  const status = !s ? 'Novo' : (s.box >= 4 ? 'Dominado' : 'Em revisão');
+  box.innerHTML = `
+    <div class="fc-meta">${tagChip(c.t)}<span>${status} · ${total}</span></div>
+    <div class="fc-front">${c.f}</div>
+    <div class="fc-back" ${fc.revealed ? '' : 'hidden'}>${c.b}</div>
+    <div class="fc-actions" id="fcAct"></div>`;
+  const act = $('#fcAct');
+  if(!fc.revealed){
+    act.innerHTML = (fc.mode === 'nav' ? `<button class="btn" type="button" data-nav="-1" ${fc.pos === 0 ? 'disabled' : ''}>← Anterior</button>` : '') +
+      `<button class="btn primary" type="button" id="reveal" style="flex:1">Mostrar resposta <span class="kbd" style="color:inherit;border-color:currentColor">Espaço</span></button>` +
+      (fc.mode === 'nav' ? `<button class="btn" type="button" data-nav="1" ${fc.pos >= fc.order.length - 1 ? 'disabled' : ''}>Próximo →</button>` : '');
+    $('#reveal').addEventListener('click', reveal);
+  } else {
+    act.innerHTML = `<div class="rate">
+      <button class="btn r1" type="button" data-r="1">Errei<small>de novo já</small></button>
+      <button class="btn r2" type="button" data-r="2">Difícil<small>${prevInt(id, 2)}</small></button>
+      <button class="btn r3" type="button" data-r="3">Bom<small>${prevInt(id, 3)}</small></button>
+      <button class="btn r4" type="button" data-r="4">Fácil<small>${prevInt(id, 4)}</small></button></div>` +
+      (fc.mode === 'nav' ? `<div style="display:flex;gap:8px;width:100%;justify-content:space-between"><button class="btn small" type="button" data-nav="-1" ${fc.pos === 0 ? 'disabled' : ''}>← Anterior</button><button class="btn small" type="button" data-nav="1" ${fc.pos >= fc.order.length - 1 ? 'disabled' : ''}>Pular →</button></div>` : '');
+    $$('[data-r]', act).forEach(b => b.addEventListener('click', () => rate(+b.dataset.r)));
+  }
+  $$('[data-nav]', act).forEach(b => b.addEventListener('click', () => nav(+b.dataset.nav)));
+}
+function nextBox(id, r){ const box = (srs[id] || {box:0}).box; if(r === 1) return 0; if(r === 2) return Math.max(1, box); if(r === 3) return Math.min(5, box + 1); return Math.min(5, box + 2); }
+function prevInt(id, r){ const d = INTERVALS[nextBox(id, r)]; return d === 1 ? '1 dia' : d + ' dias'; }
+function reveal(){ fc.revealed = true; renderCard(); }
+function nav(d){ const np = fc.pos + d; if(np < 0 || np >= fc.order.length) return; fc.pos = np; fc.revealed = false; renderCard(); }
+function rate(r){
+  const id = curCardId(); if(id === undefined) return;
+  const box = nextBox(id, r);
+  const prev = srs[id] || {};
+  srs[id] = { box, due: r === 1 ? Date.now() : Date.now() + INTERVALS[box] * 864e5, seen: (prev.seen || 0) + 1 };
+  store.set('srs', srs);
+  fc.revealed = false;
+  if(fc.mode === 'srs'){
+    fc.queue.shift();
+    if(r === 1) fc.queue.splice(Math.min(3, fc.queue.length), 0, id);
+  } else if(fc.pos < fc.order.length - 1){ fc.pos++; }
+  else { toast('Fim do baralho. Embaralhe ou mude o filtro para continuar.'); }
+  renderCard();
+}
+function setMode(m){
+  fc.mode = m; fc.revealed = false;
+  $$('.seg [data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+  if(m === 'srs') buildQueue(); else buildOrder(false);
+  renderCard();
+}
+$$('.seg [data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+fcSel.addEventListener('change', () => { fc.tag = fcSel.value; fc.revealed = false; buildQueue(); buildOrder(false); renderCard(); });
+$('#fcShuffle').addEventListener('click', () => { fc.revealed = false; if(fc.mode === 'srs') shuffle(fc.queue); else buildOrder(true); renderCard(); toast('Cards embaralhados'); });
+document.addEventListener('keydown', e => {
+  if(curTab !== 'cards') return;
+  const tg = e.target; if(tg && (tg.tagName === 'INPUT' || tg.tagName === 'SELECT' || tg.tagName === 'TEXTAREA')) return;
+  if(e.key === ' ' || e.key === 'Enter'){ if(!fc.revealed && curCardId() !== undefined){ e.preventDefault(); reveal(); } }
+  else if(['1','2','3','4'].includes(e.key) && fc.revealed){ rate(+e.key); }
+  else if(e.key === 'ArrowRight' && fc.mode === 'nav'){ nav(1); }
+  else if(e.key === 'ArrowLeft' && fc.mode === 'nav'){ nav(-1); }
+});
+
+/* ---------- exportação Anki ---------- */
+function ankiText(list){
+  const cl = s => String(s).replace(/\t/g, ' ').replace(/\r?\n/g, '<br>').replace(/"/g, '&quot;');
+  const lines = ['#separator:tab', '#html:true', '#deck:Direito Penal::Dosimetria da Pena', '#tags column:3'];
+  list.forEach(c => lines.push([cl(c.f), cl(c.b), 'Dosimetria Dosimetria::' + c.t].join('\t')));
+  return lines.join('\n') + '\n';
+}
+function download(name, text){
+  try {
+    const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+    toast('Arquivo gerado: ' + name);
+  } catch(e){ toast('Não foi possível baixar. Use “Copiar texto”.'); }
+}
+async function copyText(text){
+  try { await navigator.clipboard.writeText(text); toast('Texto copiado. Cole num arquivo .txt e importe no Anki.'); }
+  catch(e){
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast('Texto copiado.'); } catch(_){ toast('Não foi possível copiar.'); }
+    ta.remove();
+  }
+}
+$('#ankiAll').addEventListener('click', () => download('Anki_Dosimetria_da_Pena.txt', ankiText(CARDS)));
+$('#ankiFilter').addEventListener('click', () => { const l = fcList(); download('Anki_Dosimetria_' + (fc.tag || 'todos') + '.txt', ankiText(l)); });
+$('#ankiCopy').addEventListener('click', () => copyText(ankiText(fcList())));
+
+/* ---------- questões ---------- */
+let qans = store.get('qans', {});
+let q = { order: QUESTOES.map(x => x.id), pos: 0 };
+const qTema = $('#qTema');
+qTema.innerHTML = `<option value="">Todos os assuntos (${QUESTOES.length})</option>` + Object.keys(TAGS).filter(t => QUESTOES.some(x => x.tema === t)).map(t => `<option value="${t}">${TAGS[t]} (${QUESTOES.filter(x => x.tema === t).length})</option>`).join('');
+function qFiltered(){
+  const tema = qTema.value, tipo = $('#qTipo').value, show = $('#qShow').value;
+  return q.order.filter(id => {
+    const x = QUESTOES[id];
+    if(tema && x.tema !== tema) return false;
+    if(tipo && x.tipo !== tipo) return false;
+    if(id === q.sticky) return true;
+    if(show === 'pend' && qans[id]) return false;
+    if(show === 'err' && (!qans[id] || qans[id].ok)) return false;
+    return true;
+  });
+}
+function qMove(d){
+  const curId = qFiltered()[q.pos];
+  q.sticky = null;
+  const l = qFiltered(), idx = l.indexOf(curId);
+  if(idx >= 0) q.pos = idx + d;
+  else if(d < 0) q.pos = q.pos - 1; // a atual saiu do filtro: a próxima já ocupa esta posição
+  renderQ();
+}
+function qScore(){
+  const ans = Object.keys(qans).length, ok = Object.values(qans).filter(a => a.ok).length;
+  $('#qScore').innerHTML = `<span>Respondidas: <b>${ans}/${QUESTOES.length}</b></span><span>Acertos: <b>${ok}</b></span><span>Erros: <b>${ans - ok}</b></span><span>Aproveitamento: <b>${ans ? Math.round(ok / ans * 100) + '%' : '—'}</b></span>`;
+  $('#qBar').style.width = (ans / QUESTOES.length * 100) + '%';
+}
+function renderQ(){
+  qScore();
+  const list = qFiltered();
+  const box = $('#qBox');
+  if(!list.length){ box.innerHTML = `<div class="empty">Nenhuma questão neste filtro. ${$('#qShow').value === 'err' ? 'Você não errou nenhuma aqui. 👏' : ''}</div>`; return; }
+  if(q.pos >= list.length) q.pos = list.length - 1;
+  if(q.pos < 0) q.pos = 0;
+  const x = QUESTOES[list[q.pos]];
+  const a = qans[x.id];
+  const estilo = x.tipo === 'ce' ? 'Certo ou errado · estilo CEBRASPE' : 'Múltipla escolha · estilo FGV/VUNESP';
+  let body = '';
+  if(x.tipo === 'ce'){
+    const opts = [[true, 'Certo'], [false, 'Errado']];
+    body = `<div class="ce">${opts.map(([v, l]) => {
+      let cls = '';
+      if(a){ if(v === x.resp) cls = 'ok'; else if(a.pick === v) cls = 'bad'; }
+      return `<button class="alt ${cls}" type="button" data-pick="${v}" ${a ? 'disabled' : ''}>${l}</button>`;
+    }).join('')}</div>`;
+  } else {
+    body = x.alts.map((t, i) => {
+      let cls = '';
+      if(a){ if(i === x.resp) cls = 'ok'; else if(a.pick === i) cls = 'bad'; }
+      return `<button class="alt ${cls}" type="button" data-pick="${i}" ${a ? 'disabled' : ''}><span class="L">${'ABCDE'[i]}</span><span>${t}</span></button>`;
+    }).join('');
+  }
+  let fb = '';
+  if(a){
+    const gab = x.tipo === 'ce' ? (x.resp ? 'Certo' : 'Errado') : 'Letra ' + 'ABCDE'[x.resp];
+    fb = `<div class="fb ${a.ok ? 'ok' : 'bad'}"><h4>${a.ok ? '✔ Você acertou' : '✘ Você errou'} · Gabarito: ${gab}</h4><p>${x.exp}</p><p class="fund"><b>Fundamento:</b> ${x.fund}</p></div>`;
+  }
+  box.innerHTML = `
+    <div class="fc-meta">${tagChip(x.tema)}<span>Questão ${q.pos + 1} de ${list.length} · ${estilo}</span></div>
+    <div class="q-enun">${x.enun}</div>
+    ${body}${fb}
+    <div class="qnav">
+      <button class="btn" type="button" id="qPrev" ${q.pos === 0 ? 'disabled' : ''}>← Anterior</button>
+      ${a ? `<button class="btn small" type="button" id="qRedo">↺ Responder de novo</button>` : ''}
+      <button class="btn ${a ? 'primary' : ''}" type="button" id="qNext" ${q.pos >= list.length - 1 ? 'disabled' : ''}>Próxima →</button>
+    </div>`;
+  $$('[data-pick]', box).forEach(b => b.addEventListener('click', () => {
+    const pick = x.tipo === 'ce' ? b.dataset.pick === 'true' : +b.dataset.pick;
+    qans[x.id] = { pick, ok: pick === x.resp }; store.set('qans', qans);
+    q.sticky = x.id; // mantém a questão visível mesmo que saia do filtro
+    renderQ();
+  }));
+  $('#qPrev').addEventListener('click', () => qMove(-1));
+  $('#qNext').addEventListener('click', () => { qMove(1); window.scrollTo({top: $('#qBox').offsetTop - 130, behavior:'smooth'}); });
+  const redo = $('#qRedo'); if(redo) redo.addEventListener('click', () => { delete qans[x.id]; store.set('qans', qans); renderQ(); });
+}
+['#qTema', '#qTipo', '#qShow'].forEach(s => $(s).addEventListener('change', () => { q.pos = 0; q.sticky = null; renderQ(); }));
+$('#qShuffle').addEventListener('click', () => { shuffle(q.order); q.pos = 0; renderQ(); toast('Questões embaralhadas'); });
+$('#qReset').addEventListener('click', () => { if(!confirm('Zerar todas as respostas das questões?')) return; qans = {}; store.set('qans', qans); q.pos = 0; renderQ(); toast('Respostas zeradas'); });
+
+/* ---------- bizus ---------- */
+$('#bzBox').innerHTML = BIZUS.map(b => `<div class="card bz"><h3>${b.t}</h3><div class="mn">${b.mn}</div>${b.html}</div>`).join('');
+
+/* ---------- destaque de busca ---------- */
+function highlight(el, term){
+  const nt = norm(term).trim(); if(!nt) return;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+  const nodes = []; while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    const text = node.nodeValue;
+    const n = text.split('').map(ch => { const k = ch.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); return k.length === 1 ? k : ch; }).join('');
+    let idx = n.indexOf(nt); if(idx < 0) return;
+    const frag = document.createDocumentFragment(); let last = 0;
+    while(idx >= 0){
+      frag.appendChild(document.createTextNode(text.slice(last, idx)));
+      const m = document.createElement('mark'); m.textContent = text.slice(idx, idx + nt.length); frag.appendChild(m);
+      last = idx + nt.length; idx = n.indexOf(nt, last);
+    }
+    frag.appendChild(document.createTextNode(text.slice(last)));
+    node.parentNode.replaceChild(frag, node);
+  });
+}
+
+/* ---------- artigos ---------- */
+function renderArt(){
+  const term = $('#artQ').value.trim(); const nt = norm(term);
+  let html = '', count = 0;
+  ARTIGOS.forEach(g => {
+    const items = g.a.filter(a => !nt || norm(a.t + ' ' + strip(a.x) + ' ' + (a.o || '')).includes(nt));
+    if(!items.length) return;
+    count += items.length;
+    html += `<div class="grp">${g.g}</div><div class="grid">` + items.map(a => `<div class="card art"><h3>${a.t}</h3><div class="txt">${a.x}</div>${a.o ? `<div class="obs">⚠ ${a.o}</div>` : ''}</div>`).join('') + `</div>`;
+  });
+  const box = $('#artBox');
+  box.innerHTML = html || `<div class="empty">Nada encontrado para “${esc(term)}”.</div>`;
+  if(term && count) highlight(box, term);
+}
+$('#artQ').addEventListener('input', renderArt);
+
+/* ---------- jurisprudência ---------- */
+const jFase = $('#jFase');
+jFase.innerHTML = `<option value="">Todos os assuntos</option>` + Object.keys(TAGS).filter(t => JURIS.some(j => j.fase === t)).map(t => `<option value="${t}">${TAGS[t]}</option>`).join('');
+function renderJ(){
+  const term = $('#jQ').value.trim(), nt = norm(term), tr = $('#jTrib').value, fs = jFase.value, nv = $('#jNew').checked;
+  const list = JURIS.filter(j => (!tr || j.tr === tr) && (!fs || j.fase === fs) && (!nv || j.novo) && (!nt || norm(`${j.tr} ${j.tp} ${j.n} ${strip(j.x)} ${strip(j.c)}`).includes(nt)));
+  $('#jCount').textContent = `${list.length} ${list.length === 1 ? 'resultado' : 'resultados'}`;
+  const box = $('#jBox');
+  box.innerHTML = list.length ? list.map(j => `
+    <div class="card j ${j.tr.toLowerCase()}">
+      <div class="hd"><span class="chip" style="--c:var(--${j.tr === 'STF' ? 'f5' : 'f1'})">${j.tr}</span><h3>${j.tp === 'Súmula' ? 'Súmula ' : ''}${j.n}</h3>${tagChip(j.fase)}${j.st ? `<span class="chip ${j.st === 'Pendente' ? 'pend' : 'new'}">${j.st}</span>` : ''}</div>
+      <div class="txt">${j.x}</div>
+      <div class="nota">${j.c}</div>
+    </div>`).join('') : `<div class="empty">Nada encontrado.</div>`;
+  if(term && list.length) highlight(box, term);
+}
+['#jQ'].forEach(s => $(s).addEventListener('input', renderJ));
+['#jTrib', '#jFase', '#jNew'].forEach(s => $(s).addEventListener('change', renderJ));
+
+/* ---------- simulador ---------- */
+const DIA_ANO = 360, DIA_MES = 30;
+const toDays = (a, m) => (Math.max(0, +a || 0) * 12 + Math.max(0, +m || 0)) * DIA_MES;
+const fl = d => Math.floor(d + 1e-6);
+function fmt(d){
+  d = Math.max(0, fl(d));
+  const a = Math.floor(d / DIA_ANO), m = Math.floor((d % DIA_ANO) / DIA_MES), dd = d % DIA_MES;
+  const p = [];
+  if(a) p.push(a + (a === 1 ? ' ano' : ' anos'));
+  if(m) p.push(m + (m === 1 ? ' mês' : ' meses'));
+  if(dd) p.push(dd + (dd === 1 ? ' dia' : ' dias'));
+  if(!p.length) return '0 dia';
+  return p.length === 1 ? p[0] : p.slice(0, -1).join(', ') + ' e ' + p[p.length - 1];
+}
+const PRESETS = [
+  {n:'Personalizado'},
+  {n:'Furto simples (art. 155) · 1 a 4 anos', min:[1,0], max:[4,0], e:'R', v:false},
+  {n:'Furto qualificado (art. 155, § 4º) · 2 a 8 anos', min:[2,0], max:[8,0], e:'R', v:false},
+  {n:'Roubo (art. 157) · 4 a 10 anos', min:[4,0], max:[10,0], e:'R', v:true},
+  {n:'Estelionato (art. 171) · 1 a 5 anos', min:[1,0], max:[5,0], e:'R', v:false},
+  {n:'Receptação (art. 180) · 1 a 4 anos', min:[1,0], max:[4,0], e:'R', v:false},
+  {n:'Homicídio simples (art. 121) · 6 a 20 anos', min:[6,0], max:[20,0], e:'R', v:true},
+  {n:'Homicídio qualificado (art. 121, § 2º) · 12 a 30 anos', min:[12,0], max:[30,0], e:'R', v:true},
+  {n:'Tráfico de drogas (art. 33 da Lei 11.343) · 5 a 15 anos', min:[5,0], max:[15,0], e:'R', v:false},
+  {n:'Lesão corporal (art. 129, caput) · 3 meses a 1 ano, detenção', min:[0,3], max:[1,0], e:'D', v:true}
+];
+const CIRC = ['Culpabilidade','Antecedentes','Conduta social','Personalidade','Motivos','Circunstâncias do crime','Consequências do crime','Comportamento da vítima'];
+const CAUSAS = [
+  {n:'Tentativa (art. 14, par. único)', s:'-', f:'1/3'},
+  {n:'Arrependimento posterior (art. 16)', s:'-', f:'1/3'},
+  {n:'Semi-imputabilidade (art. 26, par. único)', s:'-', f:'1/3'},
+  {n:'Participação de menor importância (art. 29, § 1º)', s:'-', f:'1/6'},
+  {n:'Tráfico privilegiado (art. 33, § 4º)', s:'-', f:'2/3'},
+  {n:'Roubo, § 2º (concurso de agentes etc.)', s:'+', f:'1/3'},
+  {n:'Roubo, § 2º-A (arma de fogo)', s:'+', f:'2/3'},
+  {n:'Outra causa de aumento', s:'+', f:'1/6'},
+  {n:'Outra causa de diminuição', s:'-', f:'1/6'}
+];
+const FRACS = ['1/6','1/5','1/4','1/3','1/2','2/3','1/1'];
+const frVal = f => { const [a, b] = f.split('/').map(Number); return a / b; };
+const frLabel = (f, s) => f === '1/1' ? (s === '+' ? 'dobro (+1/1)' : '1/1') : f;
+let causas = [];
+$('#sPreset').innerHTML = PRESETS.map((p, i) => `<option value="${i}">${p.n}</option>`).join('');
+$('#sPreset').value = '1';
+$('#sCirc').innerHTML = CIRC.map((c, i) => `<label><input type="checkbox" data-c="${i}" ${i === 7 ? 'disabled title="Nunca pode ser negativa"' : ''}> ${c}${i === 7 ? ' <span class="small muted">(só neutra)</span>' : ''}</label>`).join('');
+$('#sCausaAdd').innerHTML = CAUSAS.map((c, i) => `<option value="${i}">${c.s === '+' ? '▲' : '▼'} ${c.n}</option>`).join('');
+function renderCausas(){
+  $('#sCausas').innerHTML = causas.map((c, i) => `
+    <div class="causa">
+      <select data-k="s" data-i="${i}" aria-label="Aumento ou diminuição"><option value="+" ${c.s === '+' ? 'selected' : ''}>Aumento</option><option value="-" ${c.s === '-' ? 'selected' : ''}>Diminuição</option></select>
+      <select data-k="f" data-i="${i}" aria-label="Fração">${FRACS.filter(f => c.s === '+' || f !== '1/1').map(f => `<option value="${f}" ${c.f === f ? 'selected' : ''}>${frLabel(f, c.s)}</option>`).join('')}</select>
+      <input type="text" data-k="n" data-i="${i}" value="${esc(c.n)}" aria-label="Descrição">
+      <button class="x" type="button" data-del="${i}" aria-label="Remover">×</button>
+    </div>`).join('') || `<p class="small muted" style="margin:0 0 10px">Nenhuma causa adicionada.</p>`;
+  $$('#sCausas [data-k]').forEach(el => el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', () => {
+    const c = causas[+el.dataset.i]; c[el.dataset.k] = el.value;
+    if(el.dataset.k === 's' && c.s === '-' && c.f === '1/1') c.f = '2/3';
+    if(el.dataset.k !== 'n') renderCausas();
+    calc();
+  }));
+  $$('#sCausas [data-del]').forEach(b => b.addEventListener('click', () => { causas.splice(+b.dataset.del, 1); renderCausas(); calc(); }));
+}
+$('#sAddBtn').addEventListener('click', () => { const c = CAUSAS[+$('#sCausaAdd').value]; causas.push({n:c.n, s:c.s, f:c.f}); renderCausas(); calc(); });
+function applyPreset(){
+  const p = PRESETS[+$('#sPreset').value]; if(!p.min) return;
+  $('#sMinA').value = p.min[0]; $('#sMinM').value = p.min[1]; $('#sMaxA').value = p.max[0]; $('#sMaxM').value = p.max[1];
+  $('#sEsp').value = p.e; $('#sVio').checked = !!p.v;
+}
+$('#sPreset').addEventListener('change', () => { applyPreset(); calc(); });
+['#sMinA','#sMinM','#sMaxA','#sMaxM'].forEach(s => $(s).addEventListener('input', () => { $('#sPreset').value = '0'; calc(); }));
+$('#tab-simulador').addEventListener('input', e => { if(e.target.closest('.causa')) return; calc(); });
+$('#tab-simulador').addEventListener('change', e => { if(e.target.closest('.causa') || e.target.id === 'sPreset') return; calc(); });
+
+function concFrac(tipo, n){
+  if(tipo === 'formal'){ if(n <= 2) return ['1/6', 1/6]; if(n === 3) return ['1/5', 1/5]; if(n === 4) return ['1/4', 1/4]; if(n === 5) return ['1/3', 1/3]; return ['1/2', 1/2]; }
+  if(n <= 2) return ['1/6', 1/6]; if(n === 3) return ['1/5', 1/5]; if(n === 4) return ['1/4', 1/4]; if(n === 5) return ['1/3', 1/3]; if(n === 6) return ['1/2', 1/2]; return ['2/3', 2/3];
+}
+function calc(){
+  const out = $('#sOut');
+  const min = toDays($('#sMinA').value, $('#sMinM').value), max = toDays($('#sMaxA').value, $('#sMaxM').value);
+  if(!(min > 0) || !(max > min)){ out.innerHTML = `<h3>Resultado</h3><p class="err">Informe uma pena mínima maior que zero e uma máxima maior que a mínima.</p>`; return; }
+  const memo = [];
+  const negIdx = $$('#sCirc input:checked').map(i => +i.dataset.c);
+  const neg = negIdx.length;
+  const crit = $('#sCrit').value;
+  // 1ª fase
+  const unit = crit === '8' ? (max - min) / 8 : min / 6;
+  let base = min + neg * unit;
+  let n1 = '';
+  if(base > max){ base = max; n1 = ' <span class="w">(limitada ao máximo)</span>'; }
+  base = fl(base);
+  memo.push(`<b>1ª fase:</b> ${neg ? `${neg} circunstância${neg > 1 ? 's' : ''} negativa${neg > 1 ? 's' : ''} × ${crit === '8' ? '1/8 do intervalo' : '1/6 da mínima'} (${fmt(unit)} cada)` : 'nenhuma circunstância negativa'} → pena-base de <b>${fmt(base)}</b>${n1}.`);
+  // 2ª fase
+  const ag = Math.max(0, parseInt($('#sAg').value, 10) || 0), at = Math.max(0, parseInt($('#sAt').value, 10) || 0);
+  const net = ag - at;
+  let inter = base + net * base / 6, n2 = '';
+  if(inter < min){ inter = min; n2 = ' <span class="w">(travada no mínimo: Súmula 231 do STJ)</span>'; }
+  if(inter > max){ inter = max; n2 = ' <span class="w">(travada no máximo cominado)</span>'; }
+  inter = fl(inter);
+  memo.push(`<b>2ª fase:</b> ${ag} agravante${ag === 1 ? '' : 's'} e ${at} atenuante${at === 1 ? '' : 's'}${ag && at ? ` (compensadas: saldo ${net > 0 ? '+' : ''}${net})` : ''}${net ? ` → ${net > 0 ? '+' : '−'}${Math.abs(net)}/6 de ${fmt(base)}` : ''} → pena intermediária de <b>${fmt(inter)}</b>${n2}.`);
+  // 3ª fase
+  let def = inter;
+  if(causas.length){
+    const steps = causas.map(c => {
+      const v = frVal(c.f), antes = def;
+      def = fl(c.s === '+' ? def * (1 + v) : def * (1 - v));
+      return `${c.s === '+' ? '+' : '−'}${frLabel(c.f, c.s)} (${esc(c.n)}): ${fmt(antes)} → ${fmt(def)}`;
+    });
+    memo.push(`<b>3ª fase</b> (em cascata):<br>${steps.join('<br>')}`);
+  } else memo.push(`<b>3ª fase:</b> sem causas de aumento ou diminuição → <b>${fmt(def)}</b>.`);
+  // concurso
+  const ct = $('#sConc').value; let nConc = Math.max(2, parseInt($('#sConcN').value, 10) || 2);
+  if(ct){
+    const [fl_, fv] = concFrac(ct, nConc);
+    const antes = def; def = fl(def * (1 + fv));
+    memo.push(`<b>Concurso ${ct === 'formal' ? 'formal próprio' : 'continuado'}:</b> ${nConc} crimes → +${fl_} ${ct === 'cont' ? '(Súmula 659 do STJ)' : '(critério do número de infrações)'}: ${fmt(antes)} → <b>${fmt(def)}</b>.`);
+  }
+  if(def > 40 * DIA_ANO) memo.push(`<span class="w">Lembrete: o limite de cumprimento é de 40 anos (art. 75), mas a pena aplicada não é reduzida por isso.</span>`);
+
+  // regime
+  const esp = $('#sEsp').value, reinc = $('#sReinc').checked, vio = $('#sVio').checked, culp = $('#sCulp').checked, idoso = $('#sIdoso').checked;
+  const det = Math.max(0, parseInt($('#sDet').value, 10) || 0) * DIA_MES;
+  const pr = Math.max(0, def - det);
+  const anyNeg = neg > 0;
+  let reg, regWhy;
+  const A4 = 4 * DIA_ANO, A8 = 8 * DIA_ANO, A2 = 2 * DIA_ANO, A1 = DIA_ANO;
+  if(esp === 'D'){
+    if(pr > A4 || reinc){ reg = 'Semiaberto'; regWhy = 'Detenção não começa no fechado (art. 33, caput); acima de 4 anos ou réu reincidente, o semiaberto.'; }
+    else { reg = 'Aberto'; regWhy = 'Detenção até 4 anos, réu não reincidente (art. 33, § 2º, c).'; }
+  } else if(pr > A8){ reg = 'Fechado'; regWhy = 'Pena superior a 8 anos (art. 33, § 2º, a).'; }
+  else if(pr > A4){
+    if(reinc){ reg = 'Fechado'; regWhy = 'Reincidente com pena superior a 4 anos (art. 33, § 2º, b, a contrario sensu).'; }
+    else { reg = 'Semiaberto'; regWhy = 'Pena superior a 4 e até 8 anos, réu não reincidente (art. 33, § 2º, b).' + (anyNeg ? ' Com circunstâncias negativas, o juiz pode fixar o fechado com fundamentação concreta (§ 3º; Súmula 719 do STF).' : ''); }
+  } else {
+    if(reinc){ if(!anyNeg){ reg = 'Semiaberto'; regWhy = 'Reincidente com pena até 4 anos e circunstâncias favoráveis (Súmula 269 do STJ).'; } else { reg = 'Fechado'; regWhy = 'Reincidente com circunstâncias judiciais desfavoráveis (Súmula 269 do STJ, a contrario sensu).'; } }
+    else { reg = 'Aberto'; regWhy = 'Pena até 4 anos, réu não reincidente (art. 33, § 2º, c).' + (anyNeg ? ' Com circunstâncias negativas, o juiz pode fixar regime mais gravoso com fundamentação concreta.' : ''); }
+  }
+  // substituição
+  const neg44 = negIdx.some(i => i <= 5);
+  let sub, subWhy;
+  const req1 = culp || (def <= A4 && !vio);
+  if(!req1){ sub = 'Não cabe'; subWhy = vio && !culp ? 'Crime doloso com violência ou grave ameaça (art. 44, I).' : 'Pena superior a 4 anos em crime doloso (art. 44, I).'; }
+  else if(reinc){ sub = 'Excepcional'; subWhy = 'Reincidente: só se a medida for socialmente recomendável e a reincidência não for no mesmo crime (art. 44, § 3º).'; }
+  else if(neg44){ sub = 'Depende'; subWhy = 'Há circunstâncias judiciais negativas: o juiz avalia se a substituição é suficiente (art. 44, III).'; }
+  else { sub = 'Cabe'; subWhy = ''; }
+  if(sub !== 'Não cabe') subWhy += (subWhy ? ' ' : '') + (def <= A1 ? 'Pena até 1 ano: multa ou 1 restritiva de direitos (art. 44, § 2º).' : 'Pena acima de 1 ano: 1 restritiva + multa ou 2 restritivas (art. 44, § 2º).');
+  // sursis
+  let sur, surWhy;
+  const lim = idoso ? A4 : A2;
+  if(sub === 'Cabe'){ sur = 'Não se aplica'; surWhy = 'Cabível a substituição, que tem preferência (art. 77, III).'; }
+  else if(def > lim){ sur = 'Não cabe'; surWhy = idoso ? 'Pena superior a 4 anos (art. 77, § 2º).' : 'Pena superior a 2 anos (art. 77, caput).'; }
+  else if(reinc){ sur = 'Não cabe'; surWhy = 'Reincidente em crime doloso (art. 77, I).'; }
+  else if(neg44){ sur = 'Depende'; surWhy = 'Circunstâncias judiciais negativas (art. 77, II).'; }
+  else { sur = 'Cabe'; surWhy = idoso ? 'Sursis etário ou humanitário: período de prova de 4 a 6 anos.' : 'Sursis simples: período de prova de 2 a 4 anos.'; }
+
+  out.innerHTML = `
+    <h3>Resultado</h3>
+    <div class="small muted">Pena definitiva</div>
+    <div class="big-pena">${fmt(def)}</div>
+    <ol class="memo">${memo.map(m => `<li>${m}</li>`).join('')}</ol>
+    <div class="out-row"><span>Regime inicial${det ? ` <span class="small muted">(com detração de ${fmt(det)}: ${fmt(pr)})</span>` : ''}</span><span>${reg}</span></div>
+    <p class="small muted" style="margin:4px 0 0">${regWhy}</p>
+    <div class="out-row"><span>Substituição (art. 44)</span><span>${sub}</span></div>
+    ${subWhy ? `<p class="small muted" style="margin:4px 0 0">${subWhy}</p>` : ''}
+    <div class="out-row"><span>Sursis (art. 77)</span><span>${sur}</span></div>
+    <p class="small muted" style="margin:4px 0 0">${surWhy}</p>
+    ${reinc && ag === 0 ? `<p class="note" style="margin-top:12px">Você marcou reincidência, mas não contou nenhuma agravante. Lembre que a reincidência é agravante da 2ª fase (art. 61, I).</p>` : ''}
+  `;
+}
+
+/* ---------- inicialização ---------- */
+buildQueue(); buildOrder(false); renderCard();
+renderQ(); renderArt(); renderJ();
+applyPreset(); renderCausas(); calc();
+const startTab = store.get('tab', 'inicio');
+showTab(TABS_OK(startTab) ? startTab : 'inicio');
+function TABS_OK(t){ return !!$('#tab-' + t); }
+})();
+</script>
+</body>
+</html>
